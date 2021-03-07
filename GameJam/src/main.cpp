@@ -1,5 +1,6 @@
 #define OLC_PGE_APPLICATION
 #include "headers/olcPixelGameEngine.h"
+#include "headers/olcPGEX_SplashScreen.h"
 
 class Game : public olc::PixelGameEngine
 {
@@ -13,7 +14,8 @@ public:
 
     enum game_states
     {
-        MAIN_MENU = 0,
+        SPLASHSCREEN = 0,
+        MAIN_MENU,
         INTRO_MENU,
         SETTINGS_MENU,
         START_GAME,
@@ -21,11 +23,14 @@ public:
         END_GAME
     };
 
+    // Splash screen
+    olcPGEX_SplashScreen splash_screen;
+
     game_states game_state;
 
 	bool OnUserCreate() override
 	{
-        game_state = game_states::MAIN_MENU;
+        game_state = game_states::SPLASHSCREEN;
 		// Called once at the start, so create things here
 		return true;
 	}
@@ -36,6 +41,11 @@ public:
 
         switch (game_state)
         {
+        case SPLASHSCREEN:
+            if (splash_screen.AnimateSplashScreen(fElapsedTime))
+                return true;
+            game_state = game_states::MAIN_MENU;
+            break;
         case MAIN_MENU:
             for (int x = 0; x < ScreenWidth(); x++)
                 for (int y = 0; y < ScreenHeight(); y++)
