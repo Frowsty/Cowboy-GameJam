@@ -7,6 +7,12 @@
 *.o
 *.obj
 
+#debug files
+*.tlog
+*.pdb
+*.iobj
+*.ipdb
+
 # Precompiled Headers
 *.gch
 *.pch
