@@ -3,6 +3,10 @@
 
 int main()
 {
+#ifndef _DEBUG
+	FreeConsole();
+#endif
+
 	Game game;
 	if (game.Construct(512, 256, 1, 1))
         game.Start();
