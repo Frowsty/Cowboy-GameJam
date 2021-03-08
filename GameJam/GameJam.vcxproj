@@ -123,10 +123,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\olcExampleProgram.cpp" />
+    <ClCompile Include="src\game.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\player.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\headers\core.h" />
+    <ClInclude Include="src\headers\game.h" />
+    <ClInclude Include="src\headers\olcPGEX_SplashScreen.h" />
     <ClInclude Include="src\headers\olcPixelGameEngine.h" />
+    <ClInclude Include="src\headers\player.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
