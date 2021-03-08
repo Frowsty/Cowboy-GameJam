@@ -36,5 +36,5 @@
 /.vs/
 /.vscode/
 /.git/
-/.bin/
-/.obj/
+/bin/
+/obj/

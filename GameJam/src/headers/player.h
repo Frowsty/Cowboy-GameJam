@@ -1,5 +1,6 @@
 // Player class
 #pragma once
+
 #include "core.h"
 
 class Player
