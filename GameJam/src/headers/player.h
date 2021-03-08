@@ -1,10 +1,12 @@
 // Player class
 #pragma once
 #include "core.h"
+
 class Player
 {
 public:
     olc::PixelGameEngine* m_pge;
+
 public:
     Player();
 

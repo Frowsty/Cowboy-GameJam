@@ -1,6 +1,5 @@
 #include "headers/game.h"
 
-
 bool Game::OnUserCreate()
 {
     player.m_pge = this;
@@ -37,5 +36,6 @@ bool Game::OnUserUpdate(float fElapsedTime)
     case Game::game_states::END_GAME:
         break;
     }
+
     return true;
 }
