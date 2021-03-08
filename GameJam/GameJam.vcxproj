@@ -157,6 +157,7 @@
   <ItemGroup>
     <ClInclude Include="src\headers\core.h" />
     <ClInclude Include="src\headers\game.h" />
+    <ClInclude Include="src\headers\olcPGEX_AnimatedSprite.h" />
     <ClInclude Include="src\headers\olcPGEX_SplashScreen.h" />
     <ClInclude Include="src\headers\olcPixelGameEngine.h" />
     <ClInclude Include="src\headers\player.h" />

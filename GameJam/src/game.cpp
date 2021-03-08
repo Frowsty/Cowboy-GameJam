@@ -2,6 +2,7 @@
 
 bool Game::OnUserCreate()
 {
+    player.create();
     player.m_pge = this;
 
     return true;
@@ -9,6 +10,7 @@ bool Game::OnUserCreate()
 
 bool Game::OnUserUpdate(float fElapsedTime)
 {
+    Game::Clear(olc::BLACK);
     switch (game_state)
     {
     case Game::game_states::SPLASHSCREEN:
