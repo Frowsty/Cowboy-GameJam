@@ -31,6 +31,7 @@ void Player::create()
     // initialize a starting position
     start_position = { 64, 600 };
     position = start_position;
+    new_position = start_position;
 }
 
 void Player::set_idle_sprite(int direction)
