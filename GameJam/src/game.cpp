@@ -29,7 +29,12 @@ bool Game::OnUserUpdate(float fElapsedTime)
             game_state = !in_game ? game_states::START_GAME : game_states::GAMEPLAY;
         });
 
-        menu.add_button({ ((float(ScreenWidth()) / 2) - 50), ((float(ScreenHeight()) / 2) + 15) }, { 100, 20 }, !in_game ? "Exit" : "Quit game", [&]() 
+        menu.add_button({ ((float(ScreenWidth()) / 2) - 50), ((float(ScreenHeight()) / 2) + 15) }, { 100, 20 }, "How to play", [&]()
+        {
+            game_state = game_states::SETTINGS_MENU;
+        });
+
+        menu.add_button({ ((float(ScreenWidth()) / 2) - 50), ((float(ScreenHeight()) / 2) + 40) }, { 100, 20 }, !in_game ? "Exit" : "Quit game", [&]() 
         { 
             if (!in_game)
                 game_state = game_states::END_GAME;
@@ -46,6 +51,19 @@ bool Game::OnUserUpdate(float fElapsedTime)
         return true;
 
     case Game::game_states::SETTINGS_MENU:
+        menu.add_text({ ((float(ScreenWidth()) / 2) - 50), ((float(ScreenHeight()) / 2) - 23) }, "Move left: Left arrow key");
+        menu.add_text({ ((float(ScreenWidth()) / 2) - 50), ((float(ScreenHeight()) / 2) - 10) }, "Move right: Right arrow key");
+        menu.add_text({ ((float(ScreenWidth()) / 2) - 50), ((float(ScreenHeight()) / 2) + 3) }, "Jump: Up arrow key/Space");
+        menu.add_button({ ((float(ScreenWidth()) / 2) - 50), ((float(ScreenHeight()) / 2) + 16) }, { 100, 20 }, "Back", [&]()
+        {
+            game_state = game_states::MAIN_MENU;
+        });
+
+        menu.on_input();
+        menu.on_render();
+
+        menu.reset();
+
         return true;
 
     case Game::game_states::START_GAME:
@@ -70,7 +88,7 @@ bool Game::OnUserUpdate(float fElapsedTime)
 
         // pause menu.
         if (GetKey(olc::ESCAPE).bPressed)
-          game_state = game_states::MAIN_MENU;
+            game_state = game_states::MAIN_MENU;
 
         return true;
 
