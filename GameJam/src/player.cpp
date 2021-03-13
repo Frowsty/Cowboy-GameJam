@@ -150,6 +150,7 @@ bool Player::run_collision()
 {
     for (auto c : *collidable_tiles)
     {
+        m_pge->DrawRect(c.second->position, { 32, 32 }, olc::RED);
         if (check_collision(*c.second))
         {
             if (c.first == "collectable")
