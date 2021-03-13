@@ -2,6 +2,7 @@
 
 bool Game::OnUserCreate()
 {    
+    in_game = false;
     return true;
 }
 
@@ -11,7 +12,8 @@ bool Game::OnUserUpdate(float fElapsedTime)
     switch (game_state)
     {
     case Game::game_states::SPLASHSCREEN:
-        splash_screen.AnimateSplashScreen(fElapsedTime);
+        if (splash_screen.AnimateSplashScreen(fElapsedTime))
+            return true;
 
         // setup the menu before setting the menu state.
         menu.setup(this);
@@ -24,18 +26,15 @@ bool Game::OnUserUpdate(float fElapsedTime)
         menu.add_text({ ((float(ScreenWidth()) / 2) - 50), ((float(ScreenHeight()) / 2) - 23) }, !in_game ? "Cowboy game jam." : "Paused.");
         menu.add_button({ ((float(ScreenWidth()) / 2) - 50), ((float(ScreenHeight()) / 2) - 10) }, { 100, 20 }, !in_game ? "Play" : "Continue", [&]()
         { 
-            if (!in_game)
-                game_state = game_states::START_GAME;
-            else
-                game_state = game_states::GAMEPLAY;         
+            game_state = !in_game ? game_states::START_GAME : game_states::GAMEPLAY;
         });
 
         menu.add_button({ ((float(ScreenWidth()) / 2) - 50), ((float(ScreenHeight()) / 2) + 15) }, { 100, 20 }, !in_game ? "Exit" : "Quit game", [&]() 
         { 
             if (!in_game)
                 game_state = game_states::END_GAME;
-            else           
-              in_game = false;            
+            else
+                in_game = false;
         });
 
         // update input and render.
@@ -79,8 +78,6 @@ bool Game::OnUserUpdate(float fElapsedTime)
         // exit the game.
         return false;    
     default:
-      return true;
+        return true;
     }
-
-    return false;
 }
