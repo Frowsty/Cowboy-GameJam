@@ -96,6 +96,8 @@ private:
 		std::vector<std::shared_ptr<element>> m_elms;
 
 public:
+		Menu() = default;
+
 		void setup(olc::PixelGameEngine* pge) 
 		{
 				m_pge = pge;

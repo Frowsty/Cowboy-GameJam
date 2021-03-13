@@ -2,9 +2,6 @@
 
 bool Game::OnUserCreate()
 {    
-    map.m_pge = this;
-    player.m_pge = this;
-    menu.setup(this);
     return true;
 }
 
@@ -14,11 +11,13 @@ bool Game::OnUserUpdate(float fElapsedTime)
     switch (game_state)
     {
     case Game::game_states::SPLASHSCREEN:
-        if (splash_screen.AnimateSplashScreen(fElapsedTime))
-            return true;
+        splash_screen.AnimateSplashScreen(fElapsedTime);
 
+        // setup the menu before setting the menu state.
+        menu.setup(this);
         game_state = game_states::MAIN_MENU;
-        break;
+
+        return true;
 
     case Game::game_states::MAIN_MENU:
         // push all menu elements to the vector.
@@ -45,37 +44,43 @@ bool Game::OnUserUpdate(float fElapsedTime)
 
         // clear the items for next frame render.
         menu.reset();
-
-        break;
+        return true;
 
     case Game::game_states::SETTINGS_MENU:
-        break;
+      return true;
 
     case Game::game_states::START_GAME:
-        menu.reset();
-
+        // setup the map data and load in the first map.
+        map.m_pge = this;
         map.loadMap("./sprites/map1.json");
 
+        // setup the local player and load in resources.
+        player.m_pge = this;
         player.create();
         player.collidable_tiles = &map.collidable_tiles;
 
+        // we can start the game now.
         in_game = true;
         game_state = game_states::GAMEPLAY;
-
-        break;
+        return true;
 
     case Game::game_states::GAMEPLAY:
+        // run the main game.
         map.render();
         player.update();
 
+        // pause menu.
         if (GetKey(olc::ESCAPE).bPressed)
           game_state = game_states::MAIN_MENU;
 
-        break;
+        return true;
 
     case Game::game_states::END_GAME:
-        return false;
+        // exit the game.
+        return false;    
+    default:
+      return true;
     }
 
-    return true;
+    return false;
 }
