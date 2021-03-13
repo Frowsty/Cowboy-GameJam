@@ -21,7 +21,7 @@ public:
     olc::vi2d size;
     olc::AnimatedSprite player_sprite;
     olc::Renderable* spritesheet;
-    std::vector <std::pair<std::string, Map::tile*>>* collidable_tiles;
+    std::vector<std::pair<std::string, Map::tile*>>* collidable_tiles;
 public:
 
     // create player

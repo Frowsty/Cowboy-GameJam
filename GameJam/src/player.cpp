@@ -114,7 +114,7 @@ void Player::movement()
     }
 
     // Set idle animation after no movement has been made for x time
-    if (GetTickCount() - last_movement_tick > 100)
+    if (GetTickCount() - last_movement_tick > 10)
         set_idle_sprite(last_direction);
 }
 
@@ -137,7 +137,7 @@ bool Player::check_collision(Map::tile& left)
 
 bool Player::run_collision()
 {
-    for (std::pair<std::string, Map::tile*> c : *collidable_tiles)
+    for (auto c : *collidable_tiles)
     {
         if (check_collision(*c.second))
         {

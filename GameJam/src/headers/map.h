@@ -19,7 +19,7 @@ public:
     olc::vi2d map_size;
     olc::Renderable sprite_sheet;
     std::deque<Map::tile*> tiles;
-    std::vector <std::pair<std::string, Map::tile*>> collidable_tiles;
+    std::vector<std::pair<std::string, Map::tile*>> collidable_tiles;
 public:
 
     // Load map from pyxel
