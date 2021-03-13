@@ -78,6 +78,7 @@ void Map::loadMap(const std::string& path)
 
 void Map::render()
 {
+    m_pge->Clear({ 62, 190, 237 });
     for (auto* tile : tiles)
     {
         if (tile->destroyed)
