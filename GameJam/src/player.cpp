@@ -165,6 +165,13 @@ bool Player::run_collision()
                 tile->destroyed = true;
                 return false;
             }
+            else if (name.compare("correct_key") == 0)
+            {
+                has_key = true;
+                tile->destroyed = true;
+                // display text for x seconds that player has received the correct key
+                std::cout << has_key << '\n';
+            }
             else if (name.compare("new_level") == 0 && has_key)
             {
                 level++;

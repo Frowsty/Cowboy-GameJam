@@ -1,5 +1,6 @@
 #include "headers/map.h"
 #include "headers/json.hpp"
+#include <stdlib.h>
 
 using json = nlohmann::json;
 
@@ -8,7 +9,6 @@ void Map::loadMap(const std::string& path)
     sprite_sheet.Load("./sprites/tilesheet.png");
     std::ifstream i(path);
     json j = json::parse(i);
-
     map_size.y = j.at("tileshigh");
     map_size.x = j.at("tileswide");
     olc::vi2d tile_size = { j.at("tilewidth"), j.at("tileheight") };
@@ -16,6 +16,8 @@ void Map::loadMap(const std::string& path)
     int tile_sheet_width = sprite_sheet.Sprite()->width / tile_size.x;
     auto layers = j.at("layers");
 
+    int random_key = rand() % 7 + 1;
+    int key_id = 1;
     // Loop all the layers that we grab from the json file
     for (const auto& layer : layers)
     {
@@ -72,7 +74,13 @@ void Map::loadMap(const std::string& path)
                     collidable_tiles.push_back(std::make_pair("new_level", tiles.back()));
 
                 if (layer_name == "collectables")
-                    collidable_tiles.push_back(std::make_pair("collectable", tiles.back()));
+                {
+                    if (key_id == random_key)
+                        collidable_tiles.push_back(std::make_pair("correct_key", tiles.back()));
+                    else
+                        collidable_tiles.push_back(std::make_pair("collectable", tiles.back()));
+                    key_id++;
+                }
             }
         }
     }
