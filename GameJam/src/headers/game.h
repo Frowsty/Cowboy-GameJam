@@ -19,7 +19,6 @@ public:
     {
         SPLASHSCREEN = 0,
         MAIN_MENU,
-        INTRO_MENU,
         SETTINGS_MENU,
         START_GAME,
         GAMEPLAY,

@@ -48,9 +48,6 @@ bool Game::OnUserUpdate(float fElapsedTime)
 
         break;
 
-    case Game::game_states::INTRO_MENU:
-        break;
-
     case Game::game_states::SETTINGS_MENU:
         break;
 
