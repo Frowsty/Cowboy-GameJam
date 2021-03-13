@@ -92,7 +92,6 @@ void Player::movement()
         }
         else
             did_jump = false;
-
         if (std::abs(position.y - (jump_pos.y)) >= jump_height)
         {
             jump_height = 64;
