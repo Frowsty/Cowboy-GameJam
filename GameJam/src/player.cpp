@@ -155,7 +155,7 @@ bool Player::run_collision()
             continue;
 
 #ifdef _DEBUG
-        m_pge->DrawRect(c.second->position, { 32, 32 }, olc::RED);
+        m_pge->DrawRect(tile->position, { 32, 32 }, olc::RED);
 #endif
 
         if (check_collision(*tile))
