@@ -160,6 +160,7 @@
     <ClInclude Include="src\headers\game.h" />
     <ClInclude Include="src\headers\json.hpp" />
     <ClInclude Include="src\headers\map.h" />
+    <ClInclude Include="src\headers\menu.h" />
     <ClInclude Include="src\headers\olcPGEX_AnimatedSprite.h" />
     <ClInclude Include="src\headers\olcPGEX_SplashScreen.h" />
     <ClInclude Include="src\headers\olcPixelGameEngine.h" />

@@ -3,6 +3,7 @@
 #include "core.h"
 #include "player.h"
 #include "map.h"
+#include "menu.h"
 
 class Game : public olc::PixelGameEngine
 {
@@ -37,4 +38,5 @@ public:
 private:
     Player player;
     Map map;
+    Menu menu;
 };

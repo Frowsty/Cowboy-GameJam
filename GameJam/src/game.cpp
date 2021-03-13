@@ -9,6 +9,9 @@ bool Game::OnUserCreate()
     player.collidable_tiles = &map.collidable_tiles;
     player.m_pge = this;
 
+    menu.AddElement(new ElementButton(this, { (1024 / 2) - 50, (640 / 2) - 10 }, { 100, 20 }, "Start"));
+    menu.SetCallback([&]() { game_state = game_states::GAMEPLAY; });
+
     return true;
 }
 
@@ -20,12 +23,15 @@ bool Game::OnUserUpdate(float fElapsedTime)
     case Game::game_states::SPLASHSCREEN:
         if (splash_screen.AnimateSplashScreen(fElapsedTime))
             return true;
+
         game_state = game_states::MAIN_MENU;
         break;
 
     case Game::game_states::MAIN_MENU:
-        map.render();
-        player.update();
+        menu.OnInput();
+        menu.OnRender();
+
+        //game_state = game_states::GAMEPLAY;
         break;
 
     case Game::game_states::INTRO_MENU:
@@ -38,6 +44,8 @@ bool Game::OnUserUpdate(float fElapsedTime)
         break;
 
     case Game::game_states::GAMEPLAY:
+        map.render();
+        player.update();
         break;
 
     case Game::game_states::END_GAME:
