@@ -3,7 +3,7 @@
 bool Game::OnUserCreate()
 {
     map.m_pge = this;
-    map.loadMap("./sprites/test_map.json");
+    map.loadMap("./sprites/map1.json");
 
     player.create();
     player.collidable_tiles = &map.collidable_tiles;

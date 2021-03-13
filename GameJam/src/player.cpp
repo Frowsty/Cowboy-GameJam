@@ -1,6 +1,6 @@
 #include "headers/player.h"
 
-#define GRAVITY 150
+#define GRAVITY 200
 #define SPEED 150
 
 void Player::create()
@@ -29,7 +29,8 @@ void Player::create()
     player_sprite.SetState("idle-down");
 
     // initialize a starting position
-    position = { 10, 10 };
+    start_position = { 64, 600 };
+    position = start_position;
 }
 
 void Player::set_idle_sprite(int direction)
@@ -73,17 +74,15 @@ void Player::movement()
         last_movement_tick = GetTickCount();
     }
 
-    if (((m_pge->GetKey(olc::UP).bPressed || m_pge->GetKey(olc::SPACE).bPressed) || did_jump) && on_ground)
-    {
-        if (!did_jump)
-            jump_pos = position;
-
-        did_jump = true;
-        last_movement_tick = GetTickCount();
-    }
-
     // Run jump movement smoothly until we reach the top before we start the gravity fall again
     if (did_jump)
+    {
+        if ((m_pge->GetKey(olc::UP).bPressed || m_pge->GetKey(olc::SPACE).bPressed) && !double_jump)
+        {
+            double_jump = true;
+            jump_height = 128;
+        }
+
         new_position.y -= (SPEED * 2) * m_pge->GetElapsedTime();
 
         if (!run_collision())
@@ -93,10 +92,22 @@ void Player::movement()
         }
         else
             new_position.y = position.y;
-        if (std::abs(position.y - (jump_pos.y)) > 50)
+        if (std::abs(position.y - (jump_pos.y)) >= jump_height)
         {
+            jump_height = 64;
             did_jump = false;
+            double_jump = false;
         }
+    }
+
+    if (((m_pge->GetKey(olc::UP).bPressed || m_pge->GetKey(olc::SPACE).bPressed) || did_jump) && on_ground)
+    {
+        if (!did_jump)
+            jump_pos = position;
+
+        did_jump = true;
+        last_movement_tick = GetTickCount();
+    }
 
     // Constant gravity pull
     if (!did_jump)
@@ -143,6 +154,12 @@ bool Player::run_collision()
         {
             if (c.first == "collectable")
             {
+                return true;
+            }
+            else if (c.first == "obstacle")
+            {
+                // respawn player at start
+                position = start_position;
                 return true;
             }
             else if (c.first == "map_terrain")

@@ -9,13 +9,17 @@ class Player
 public:
     olc::PixelGameEngine* m_pge;
 
+    bool dead = false;
     bool did_jump = false;
+    bool double_jump = false;
     bool on_ground = false;
+    int jump_height = 64;
     olc::vf2d jump_pos;
 
     int last_direction = 1;
     float last_movement_tick;
 
+    olc::vf2d start_position;
     olc::vf2d position;
     olc::vf2d new_position;
     olc::vi2d size;

@@ -10,7 +10,7 @@ int main()
 #endif
 
 	Game game;
-	if (game.Construct(1280, 720, 1, 1))
+	if (game.Construct(1024, 640, 1, 1))
         game.Start();
 
 	return 0;
