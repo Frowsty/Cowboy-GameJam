@@ -14,7 +14,7 @@ void Player::create()
     spritesheet->Load("./sprites/character.png");
     player_sprite.spriteSheet = spritesheet;
     player_sprite.SetSpriteSize({ 32, 32 });
-    size = { 30, 30 };
+    size = { 25, 30 };
 
     // Add different animation states
     player_sprite.AddState("idle-down", { olc::vi2d(32, 0) });
@@ -141,10 +141,10 @@ void Player::interaction()
 
 bool Player::check_collision(const Map::tile& left)
 {
-    return left.position.x + left.tile_size.x >= new_position.x
-        && left.position.x < new_position.x + size.x
+    return left.position.x + left.tile_size.x >= new_position.x + 3.5
+        && left.position.x < new_position.x + size.x + 3.5
         && left.position.y + left.tile_size.y >= new_position.y
-        && left.position.y < new_position.y + size.y;
+        && left.position.y < new_position.y + size.y + 1;
 }
 
 bool Player::run_collision()
