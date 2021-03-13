@@ -4,12 +4,13 @@
 
 int main()
 {
+/*
 #ifndef _DEBUG
 	FreeConsole();
 #endif
-
+    */
 	Game game;
-	if (game.Construct(512, 256, 1, 1))
+	if (game.Construct(1280, 720, 1, 1))
         game.Start();
 
 	return 0;

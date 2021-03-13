@@ -1,6 +1,7 @@
 #include "headers/player.h"
 
-Player::Player() { }
+#define GRAVITY 150
+#define SPEED 150
 
 void Player::create()
 {
@@ -13,6 +14,7 @@ void Player::create()
     spritesheet->Load("./sprites/character.png");
     player_sprite.spriteSheet = spritesheet;
     player_sprite.SetSpriteSize({ 32, 32 });
+    size = { 32, 32 };
 
     // Add different animation states
     player_sprite.AddState("idle-down", { olc::vi2d(32, 0) });
@@ -30,35 +32,90 @@ void Player::create()
     position = { 10, 10 };
 }
 
+void Player::set_idle_sprite(int direction)
+{
+    switch (direction)
+    {
+    case 1:
+        player_sprite.SetState("idle-left");
+        break;
+    case 2:
+        player_sprite.SetState("idle-right");
+        break;
+    }
+}
+
 void Player::movement()
 {
     if ((m_pge->GetKey(olc::LEFT).bPressed || m_pge->GetKey(olc::LEFT).bHeld))
     {
         player_sprite.SetState("walking-left");
-        position.x -= 150 * m_pge->GetElapsedTime();
-        //std::cout << "left\n";
+        new_position.x -= SPEED * m_pge->GetElapsedTime();
+
+        if (!run_collision())
+            position.x = new_position.x;
+        else
+            new_position.x = position.x;
+        last_direction = 1;
+        last_movement_tick = GetTickCount();
     }
 
     if ((m_pge->GetKey(olc::RIGHT).bPressed || m_pge->GetKey(olc::RIGHT).bHeld))
     {
         player_sprite.SetState("walking-right");
-        position.x += 150 * m_pge->GetElapsedTime();
-        //std::cout << "right\n";
+        new_position.x += SPEED * m_pge->GetElapsedTime();
+
+        if (!run_collision())
+            position.x = new_position.x;
+        else
+            new_position.x = position.x;
+        last_direction = 2;
+        last_movement_tick = GetTickCount();
     }
 
-    if ((m_pge->GetKey(olc::UP).bPressed || m_pge->GetKey(olc::UP).bHeld))
+    if (((m_pge->GetKey(olc::UP).bPressed || m_pge->GetKey(olc::SPACE).bPressed) || did_jump) && on_ground)
     {
-        player_sprite.SetState("walking-up");
-        position.y -= 150 * m_pge->GetElapsedTime();
-        //std::cout << "up\n";
+        if (!did_jump)
+            jump_pos = position;
+
+        did_jump = true;
+        last_movement_tick = GetTickCount();
     }
 
-    if ((m_pge->GetKey(olc::DOWN).bPressed || m_pge->GetKey(olc::DOWN).bHeld))
+    // Run jump movement smoothly until we reach the top before we start the gravity fall again
+    if (did_jump)
+        new_position.y -= (SPEED * 2) * m_pge->GetElapsedTime();
+
+        if (!run_collision())
+        {
+            on_ground = false;
+            position.y = new_position.y;
+        }
+        else
+            new_position.y = position.y;
+        if (std::abs(position.y - (jump_pos.y)) > 50)
+        {
+            did_jump = false;
+        }
+
+    // Constant gravity pull
+    if (!did_jump)
     {
-        player_sprite.SetState("walking-down");
-        position.y += 150 * m_pge->GetElapsedTime();
-        //std::cout << "down\n";
+        new_position.y += GRAVITY * m_pge->GetElapsedTime();
+        if (!run_collision())
+        {
+            position.y = new_position.y;
+        }
+        else
+        {
+            on_ground = true;
+            new_position.y = position.y;
+        }
     }
+
+    // Set idle animation after no movement has been made for x time
+    if (GetTickCount() - last_movement_tick > 100)
+        set_idle_sprite(last_direction);
 }
 
 void Player::interaction()
@@ -67,6 +124,34 @@ void Player::interaction()
   {
     std::cout << "interact\n";
   }
+}
+
+bool Player::check_collision(Map::tile& left)
+{
+    return true
+        && left.position.x + left.tile_size.x >= new_position.x
+        && left.position.x < new_position.x + size.x
+        && left.position.y + left.tile_size.y >= new_position.y
+        && left.position.y < new_position.y + size.y;
+}
+
+bool Player::run_collision()
+{
+    for (std::pair<std::string, Map::tile*> c : *collidable_tiles)
+    {
+        if (check_collision(*c.second))
+        {
+            if (c.first == "collectable")
+            {
+                return true;
+            }
+            else if (c.first == "map_terrain")
+            {
+                return true;
+            }
+        }
+    }
+    return false;
 }
 
 void Player::render()

@@ -2,7 +2,11 @@
 
 bool Game::OnUserCreate()
 {
+    map.m_pge = this;
+    map.loadMap("./sprites/test_map.json");
+
     player.create();
+    player.collidable_tiles = &map.collidable_tiles;
     player.m_pge = this;
 
     return true;
@@ -20,6 +24,7 @@ bool Game::OnUserUpdate(float fElapsedTime)
         break;
 
     case Game::game_states::MAIN_MENU:
+        map.render();
         player.update();
         break;
 
