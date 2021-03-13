@@ -4,7 +4,6 @@
 
 int main()
 {
-
 #ifndef _DEBUG
 		FreeConsole();
 #endif

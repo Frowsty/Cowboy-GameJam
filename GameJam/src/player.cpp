@@ -58,6 +58,7 @@ void Player::movement()
             position.x = new_position.x;
         else
             new_position.x = position.x;
+
         last_direction = 1;
         last_movement_tick = GetTickCount();
     }
@@ -71,6 +72,7 @@ void Player::movement()
             position.x = new_position.x;
         else
             new_position.x = position.x;
+
         last_direction = 2;
         last_movement_tick = GetTickCount();
     }
@@ -93,6 +95,7 @@ void Player::movement()
         }
         else
             did_jump = false;
+
         if (std::abs(position.y - (jump_pos.y)) >= jump_height)
         {
             jump_height = 64;
@@ -151,7 +154,11 @@ bool Player::run_collision()
     {
         if (c.second->destroyed)
             return false;
+
+#ifdef _DEBUG
         m_pge->DrawRect(c.second->position, { 32, 32 }, olc::RED);
+#endif
+
         if (check_collision(*c.second))
         {
             if (c.first == "collectable")
@@ -165,12 +172,11 @@ bool Player::run_collision()
                 position = start_position;
                 return true;
             }
-            else if (c.first == "map_terrain")
-            {
-                return true;
-            }
+            else if (c.first == "map_terrain")            
+                return true;            
         }
     }
+
     return false;
 }
 
