@@ -116,6 +116,7 @@ void Player::movement()
         new_position.y += GRAVITY * m_pge->GetElapsedTime();
         if (!run_collision())
         {
+            on_ground = false;
             position.y = new_position.y;
         }
         else
