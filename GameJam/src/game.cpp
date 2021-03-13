@@ -9,8 +9,7 @@ bool Game::OnUserCreate()
     player.collidable_tiles = &map.collidable_tiles;
     player.m_pge = this;
 
-    menu.AddElement(new ElementButton(this, { (1024 / 2) - 50, (640 / 2) - 10 }, { 100, 20 }, "Start"));
-    menu.SetCallback([&]() { game_state = game_states::GAMEPLAY; });
+
 
     return true;
 }
@@ -28,10 +27,17 @@ bool Game::OnUserUpdate(float fElapsedTime)
         break;
 
     case Game::game_states::MAIN_MENU:
+        // put these in OnUserCreate for static menu.
+        menu.AddButton(this, { 10, 10 }, { 100, 20 }, "Start");
+        menu.SetCallback([&]() { game_state = game_states::GAMEPLAY; });
+
+        // always keep these here!
         menu.OnInput();
         menu.OnRender();
 
-        //game_state = game_states::GAMEPLAY;
+        // dont call this for static menu.
+        menu.Reset();
+
         break;
 
     case Game::game_states::INTRO_MENU:

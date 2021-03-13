@@ -36,6 +36,8 @@ struct ElementButton : public Element {
 		m_State = ElementState::IDLE;
 	}
 
+	~ElementButton() = default;
+
 	void OnInput() override {
 		auto minput = m_Pge->GetMouse(0);
 		
@@ -55,15 +57,11 @@ struct ElementButton : public Element {
 		if (m_State == ElementState::IDLE)
 			m_Pge->FillRect(m_Pos, m_Size, olc::DARK_GREY);
 		else if (m_State == ElementState::HOVER)
-			m_Pge->FillRect(m_Pos, m_Size, olc::BLUE);
+			m_Pge->FillRect(m_Pos, m_Size, olc::GREY);
 		else if (m_State == ElementState::ACTIVE)
-			m_Pge->FillRect(m_Pos, m_Size, olc::DARK_RED);
-
-		olc::vf2d text_pos{
-			(m_Pos.x + (m_Size.x / 2)) - (m_Pge->GetTextSize(m_Name).x / 2),
-			(m_Pos.y + (m_Size.y / 2)) - (m_Pge->GetTextSize(m_Name).y / 2)
-		};
-
+			m_Pge->FillRect(m_Pos, m_Size, olc::VERY_DARK_GREY);
+		
+		olc::vf2d text_pos = (m_Pos + (m_Size / 2) - (m_Pge->GetTextSize(m_Name) / 2));
 		m_Pge->DrawString(text_pos, m_Name);
 	}
 };
@@ -71,11 +69,11 @@ struct ElementButton : public Element {
 class Menu {
 private:
 	olc::PixelGameEngine* m_pge;
-	std::vector<Element*> m_Elms;
+	std::vector<std::shared_ptr<Element>> m_Elms;
 
 public:
-	void AddElement(Element* Elm) {
-		m_Elms.push_back(Elm);
+	void AddButton(olc::PixelGameEngine* pge, const olc::vf2d& pos, const olc::vf2d& size, const std::string& text) {
+		m_Elms.push_back(std::make_shared<ElementButton>(pge, pos, size, text));
 	}
 
 	void OnInput() {
@@ -88,7 +86,11 @@ public:
 			e->OnRender();
 	}
 
-	void SetCallback(std::function<void()> callback) {
+	void Reset() {
+		m_Elms.clear();
+	}
+
+	void SetCallback(const std::function<void()> callback) {
 		auto e = m_Elms.back();
 		e->m_Callback = callback;
 	}
