@@ -139,10 +139,9 @@ void Player::interaction()
     
 }
 
-bool Player::check_collision(Map::tile& left)
+bool Player::check_collision(const Map::tile& left)
 {
-    return true
-        && left.position.x + left.tile_size.x >= new_position.x
+    return left.position.x + left.tile_size.x >= new_position.x
         && left.position.x < new_position.x + size.x
         && left.position.y + left.tile_size.y >= new_position.y
         && left.position.y < new_position.y + size.y;
@@ -150,29 +149,29 @@ bool Player::check_collision(Map::tile& left)
 
 bool Player::run_collision()
 {
-    for (auto c : *collidable_tiles)
+    for (auto& [name, tile] : *collidable_tiles)
     {
-        if (c.second->destroyed)
-            return false;
+      if (tile->destroyed)
+        continue;
 
 #ifdef _DEBUG
         m_pge->DrawRect(c.second->position, { 32, 32 }, olc::RED);
 #endif
 
-        if (check_collision(*c.second))
+        if (check_collision(*tile))
         {
-            if (c.first == "collectable")
+            if (name.compare("collectable") == 0)
             {
-                c.second->destroyed = true;
+                tile->destroyed = true;
                 return false;
             }
-            else if (c.first == "obstacle")
+            else if (name.compare("obstacle") == 0)
             {
                 // respawn player at start
                 position = start_position;
                 return true;
             }
-            else if (c.first == "map_terrain")            
+            else if (name.compare("map_terrain") == 0)
                 return true;            
         }
     }

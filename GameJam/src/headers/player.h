@@ -41,7 +41,7 @@ public:
     void interaction();
 
     // Run collision against collidable tiles
-    bool check_collision(Map::tile& collidable_tiles);
+    bool check_collision(const Map::tile& left);
     bool run_collision();
 
     // player rendering
