@@ -68,6 +68,9 @@ void Map::loadMap(const std::string& path)
                 if (layer_name == "obstacles")
                     collidable_tiles.push_back(std::make_pair("map_terrain", tiles.back()));
 
+                if(layer_name == "new_level")
+                    collidable_tiles.push_back(std::make_pair("new_level", tiles.back()));
+
                 if (layer_name == "collectables")
                     collidable_tiles.push_back(std::make_pair("collectable", tiles.back()));
             }

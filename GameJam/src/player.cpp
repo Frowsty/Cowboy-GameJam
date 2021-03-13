@@ -155,7 +155,7 @@ bool Player::run_collision()
             continue;
 
 #ifdef _DEBUG
-        m_pge->DrawRect(c.second->position, { 32, 32 }, olc::RED);
+        m_pge->DrawRect(tile->position, { 32, 32 }, olc::RED);
 #endif
 
         if (check_collision(*tile))
@@ -163,6 +163,11 @@ bool Player::run_collision()
             if (name.compare("collectable") == 0)
             {
                 tile->destroyed = true;
+                return false;
+            }
+            else if (name.compare("new_level") == 0 && has_key)
+            {
+                level++;
                 return false;
             }
             else if (name.compare("obstacle") == 0)
