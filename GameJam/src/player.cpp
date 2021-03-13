@@ -131,10 +131,7 @@ void Player::movement()
 
 void Player::interaction()
 {
-  if (m_pge->GetKey(olc::SPACE).bPressed)
-  {
-    std::cout << "interact\n";
-  }
+    
 }
 
 bool Player::check_collision(Map::tile& left)
