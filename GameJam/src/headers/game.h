@@ -14,29 +14,27 @@ public:
     }
 
 public:
-
     enum class game_states
     {
         SPLASHSCREEN = 0,
         MAIN_MENU,
         SETTINGS_MENU,
         START_GAME,
+        END_GAME,
         GAMEPLAY,
-        END_GAME
+        EXIT_GAME
     };
 
-    // Splash screen
-    olcPGEX_SplashScreen splash_screen;
+    void setup(olc::PixelGameEngine* pge);
 
-    game_states game_state = game_states::SPLASHSCREEN; // Make sure we start at the splashscreen on startup
-
-    bool OnUserCreate() override; // Called once at the start, so create things here
-
-    bool OnUserUpdate(float fElapsedTime) override; // Called once per frame
+    bool OnUserCreate() override;
+    bool OnUserUpdate(float fElapsedTime) override;
 
 private:
-    bool in_game;
+    olcPGEX_SplashScreen splash_screen;
+    game_states game_state = game_states::SPLASHSCREEN;
     Player player;
     Map map;
     Menu menu;
+    bool in_game;
 };
