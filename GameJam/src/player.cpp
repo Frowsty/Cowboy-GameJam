@@ -149,12 +149,15 @@ bool Player::run_collision()
 {
     for (auto c : *collidable_tiles)
     {
+        if (c.second->destroyed)
+            return false;
         m_pge->DrawRect(c.second->position, { 32, 32 }, olc::RED);
         if (check_collision(*c.second))
         {
             if (c.first == "collectable")
             {
-                return true;
+                c.second->destroyed = true;
+                return false;
             }
             else if (c.first == "obstacle")
             {
