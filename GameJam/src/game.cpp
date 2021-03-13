@@ -2,15 +2,6 @@
 
 bool Game::OnUserCreate()
 {
-    map.m_pge = this;
-    map.loadMap("./sprites/map1.json");
-
-    player.create();
-    player.collidable_tiles = &map.collidable_tiles;
-    player.m_pge = this;
-
-
-
     return true;
 }
 
@@ -28,15 +19,15 @@ bool Game::OnUserUpdate(float fElapsedTime)
 
     case Game::game_states::MAIN_MENU:
         // put these in OnUserCreate for static menu.
-        menu.AddButton(this, { 10, 10 }, { 100, 20 }, "Start");
-        menu.SetCallback([&]() { game_state = game_states::GAMEPLAY; });
+        menu.add_text(this, { ((float(ScreenWidth()) / 2) - 50), ((float(ScreenHeight()) / 2) - 23) }, "Cowboy game jam.");
+        menu.add_button(this, { ((float(ScreenWidth()) / 2) - 50), ((float(ScreenHeight()) / 2) - 10) }, { 100, 20 }, "Play", [&]() { game_state = game_states::START_GAME; });
 
         // always keep these here!
-        menu.OnInput();
-        menu.OnRender();
+        menu.on_input();
+        menu.on_render();
 
         // dont call this for static menu.
-        menu.Reset();
+        menu.reset();
 
         break;
 
@@ -47,9 +38,19 @@ bool Game::OnUserUpdate(float fElapsedTime)
         break;
 
     case Game::game_states::START_GAME:
+        map.m_pge = this;
+        map.loadMap("./sprites/map1.json");
+
+        player.create();
+        player.collidable_tiles = &map.collidable_tiles;
+        player.m_pge = this;
+
+        game_state = game_states::GAMEPLAY;
+
         break;
 
     case Game::game_states::GAMEPLAY:
+        menu.reset();
         map.render();
         player.update();
         break;
