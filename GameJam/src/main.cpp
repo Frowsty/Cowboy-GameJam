@@ -6,12 +6,12 @@ int main()
 {
 
 #ifndef _DEBUG
-	FreeConsole();
+		FreeConsole();
 #endif
 
-	Game game;
-	if (game.Construct(1024, 640, 1, 1))
-        game.Start();
+		Game game;
+		if (game.Construct(1024, 640, 1, 1))
+				game.Start();
 
-	return 0;
+		return 0;
 }

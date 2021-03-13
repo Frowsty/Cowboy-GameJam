@@ -46,7 +46,7 @@ bool Game::OnUserUpdate(float fElapsedTime)
         return true;
 
     case Game::game_states::SETTINGS_MENU:
-      return true;
+        return true;
 
     case Game::game_states::START_GAME:
         // setup the map data and load in the first map.
