@@ -14,7 +14,7 @@ void Player::create()
     spritesheet->Load("./sprites/character.png");
     player_sprite.spriteSheet = spritesheet;
     player_sprite.SetSpriteSize({ 32, 32 });
-    size = { 32, 32 };
+    size = { 30, 30 };
 
     // Add different animation states
     player_sprite.AddState("idle-down", { olc::vi2d(32, 0) });
@@ -91,7 +91,7 @@ void Player::movement()
             position.y = new_position.y;
         }
         else
-            new_position.y = position.y;
+            did_jump = false;
         if (std::abs(position.y - (jump_pos.y)) >= jump_height)
         {
             jump_height = 64;
