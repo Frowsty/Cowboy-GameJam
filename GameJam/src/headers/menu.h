@@ -13,7 +13,6 @@ enum class element_state {
 };
 
 struct element {
-	olc::PixelGameEngine* m_pge;
 	olc::vf2d m_pos;
 	olc::vf2d m_size;
 	std::string m_text;
@@ -23,29 +22,27 @@ struct element {
 	element() = default;
 	virtual ~element() = default;
 
-	virtual void on_input() = 0;
-	virtual void on_render() = 0;
+	virtual void on_input(olc::PixelGameEngine* pge) = 0;
+	virtual void on_render(olc::PixelGameEngine* pge) = 0;
 };
 
 struct element_text : public element {
-	element_text(olc::PixelGameEngine* pge, olc::vf2d pos, std::string text) {
-		m_pge = pge;
+	element_text(olc::vf2d pos, std::string text) {
 		m_pos = pos;
 		m_text = text;
 	}
 
 	~element_text() = default;
 
-	void on_input() override { }
+	void on_input(olc::PixelGameEngine* m_pge) override { }
 
-	void on_render() override {
+	void on_render(olc::PixelGameEngine* m_pge) override {
 		m_pge->DrawString(m_pos, m_text);
 	}
 };
 
 struct element_button : public element {
-	element_button(olc::PixelGameEngine* pge, olc::vf2d pos, olc::vf2d size, std::string text, std::function<void()> callback) {
-		m_pge = pge;
+	element_button(olc::vf2d pos, olc::vf2d size, std::string text, std::function<void()> callback) {
 		m_pos = pos;
 		m_size = size;
 		m_text = text;
@@ -55,10 +52,10 @@ struct element_button : public element {
 
 	~element_button() = default;
 
-	void on_input() override {
-		auto minput = m_pge->GetMouse(0);
+	void on_input(olc::PixelGameEngine* pge) override {
+		auto minput = pge->GetMouse(0);
 		
-		if (m_pge->GetMouseX() >= m_pos.x && m_pge->GetMouseX() <= m_pos.x + m_size.x && m_pge->GetMouseY() >= m_pos.y && m_pge->GetMouseY() <= m_pos.y + m_size.y)
+		if (pge->GetMouseX() >= m_pos.x && pge->GetMouseX() <= m_pos.x + m_size.x && pge->GetMouseY() >= m_pos.y && pge->GetMouseY() <= m_pos.y + m_size.y)
 			m_state = element_state::HOVER;
 		else
 			m_state = element_state::IDLE;
@@ -70,16 +67,16 @@ struct element_button : public element {
 			m_callback();
 	}
 
-	void on_render() override {
+	void on_render(olc::PixelGameEngine* pge) override {
 		if (m_state == element_state::IDLE)
-			m_pge->FillRect(m_pos, m_size, olc::DARK_GREY);
+			pge->FillRect(m_pos, m_size, olc::DARK_GREY);
 		else if (m_state == element_state::HOVER)
-			m_pge->FillRect(m_pos, m_size, olc::GREY);
+			pge->FillRect(m_pos, m_size, olc::GREY);
 		else if (m_state == element_state::ACTIVE)
-			m_pge->FillRect(m_pos, m_size, olc::VERY_DARK_GREY);
+			pge->FillRect(m_pos, m_size, olc::VERY_DARK_GREY);
 		
-		olc::vf2d text_pos = (m_pos + (m_size / 2) - (m_pge->GetTextSize(m_text) / 2));
-		m_pge->DrawString(text_pos, m_text);
+		olc::vf2d text_pos = (m_pos + (m_size / 2) - (pge->GetTextSize(m_text) / 2));
+		pge->DrawString(text_pos, m_text);
 	}
 };
 
@@ -89,22 +86,26 @@ private:
 	std::vector<std::shared_ptr<element>> m_elms;
 
 public:
-	void add_text(olc::PixelGameEngine* pge, const olc::vf2d& pos, const std::string& text) {
-		m_elms.push_back(std::make_shared<element_text>(pge, pos, text));
+	void setup(olc::PixelGameEngine* pge) {
+		m_pge = pge;
 	}
 
-	void add_button(olc::PixelGameEngine* pge, const olc::vf2d& pos, const olc::vf2d& size, const std::string& text, std::function<void()> callback = nullptr) {
-		m_elms.push_back(std::make_shared<element_button>(pge, pos, size, text, callback));
+	void add_text(const olc::vf2d& pos, const std::string& text) {
+		m_elms.push_back(std::make_shared<element_text>(pos, text));
+	}
+
+	void add_button(const olc::vf2d& pos, const olc::vf2d& size, const std::string& text, std::function<void()> callback = nullptr) {
+		m_elms.push_back(std::make_shared<element_button>(pos, size, text, callback));
 	}
 
 	void on_input() {
 		for (auto& e : m_elms)
-			e->on_input();
+			e->on_input(m_pge);
 	}
 
 	void on_render() {
 		for (auto& e : m_elms)
-			e->on_render();
+			e->on_render(m_pge);
 	}
 
 	void reset() {

@@ -65,8 +65,10 @@ void Map::loadMap(const std::string& path)
                 // If the layer_name is related to anything collidable we shall add it to collidable tiles
                 if (layer_name == "colliders")
                     collidable_tiles.push_back(std::make_pair("map_terrain", tiles.back()));
+
                 if (layer_name == "obstacle")
                     collidable_tiles.push_back(std::make_pair("map_terrain", tiles.back()));
+
                 if (layer_name == "collectables")
                     collidable_tiles.push_back(std::make_pair("collectable", tiles.back()));
             }

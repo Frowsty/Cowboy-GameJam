@@ -36,6 +36,7 @@ public:
     bool OnUserUpdate(float fElapsedTime) override; // Called once per frame
 
 private:
+    bool in_game;
     Player player;
     Map map;
     Menu menu;
