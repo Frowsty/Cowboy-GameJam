@@ -14,14 +14,13 @@ void Map::loadMap(const std::string& path)
     olc::vi2d tile_size = { j.at("tilewidth"), j.at("tileheight") };
 
     int tile_sheet_width = sprite_sheet.Sprite()->width / tile_size.x;
-
     auto layers = j.at("layers");
 
     // Loop all the layers that we grab from the json file
-    for (auto& layer : layers)
+    for (const auto& layer : layers)
     {
         // Loop each tile in the layer
-        for (auto& tile : layer.at("tiles"))
+        for (const auto& tile : layer.at("tiles"))
         {
             // This is the tile ID (position in the tilesheet / spritesheet) determined by Pyxel
             int tile_id = tile.at("tile");
@@ -79,7 +78,7 @@ void Map::loadMap(const std::string& path)
 void Map::render()
 {
     m_pge->Clear({ 62, 190, 237 });
-    for (auto* tile : tiles)
+    for (const auto* tile : tiles)
     {
         if (tile->destroyed)
             continue;

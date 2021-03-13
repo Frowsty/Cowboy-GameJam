@@ -151,8 +151,8 @@ bool Player::run_collision()
 {
     for (auto& [name, tile] : *collidable_tiles)
     {
-      if (tile->destroyed)
-        continue;
+        if (tile->destroyed)
+            continue;
 
 #ifdef _DEBUG
         m_pge->DrawRect(c.second->position, { 32, 32 }, olc::RED);
