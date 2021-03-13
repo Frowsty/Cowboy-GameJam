@@ -1,7 +1,7 @@
 #include "headers/game.h"
 
 bool Game::OnUserCreate()
-{
+{    
     return true;
 }
 
@@ -18,15 +18,15 @@ bool Game::OnUserUpdate(float fElapsedTime)
         break;
 
     case Game::game_states::MAIN_MENU:
-        // put these in OnUserCreate for static menu.
+        // push all menu elements to the vector.
         menu.add_text(this, { ((float(ScreenWidth()) / 2) - 50), ((float(ScreenHeight()) / 2) - 23) }, "Cowboy game jam.");
         menu.add_button(this, { ((float(ScreenWidth()) / 2) - 50), ((float(ScreenHeight()) / 2) - 10) }, { 100, 20 }, "Play", [&]() { game_state = game_states::START_GAME; });
 
-        // always keep these here!
+        // update input and render.
         menu.on_input();
         menu.on_render();
 
-        // dont call this for static menu.
+        // clear the items for next frame render.
         menu.reset();
 
         break;

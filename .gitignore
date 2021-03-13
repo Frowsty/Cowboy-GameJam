@@ -36,7 +36,6 @@
 *.exe
 *.out
 *.app
-*.json
 
 # Directories
 /.vs/
