@@ -97,7 +97,7 @@ bool Game::OnUserUpdate(float fElapsedTime)
         {
         case 1: map.loadMap("./sprites/map1.json"); break;
         case 2: map.loadMap("./sprites/map2.json"); break;
-        case 3: game_state = game_states::WIN_GAME; break;
+        case 3: game_state = game_states::WIN_GAME; return true;
         }
 
         // setup the local player and load in resources.
