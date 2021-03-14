@@ -83,6 +83,7 @@ bool Game::OnUserUpdate(float fElapsedTime)
         cur_level = player.level;
         start_time = 0;
         timer = TIMER;
+
         // setup the map data and load in the first map.
         switch (cur_level)
         {
@@ -133,9 +134,6 @@ bool Game::OnUserUpdate(float fElapsedTime)
             menu.on_render();
             menu.reset();
         }
-
-        while (GetTickCount() - player.pickup_time <= 1250)
-          return true;
 
         // Advance to next level if current one is different from the players level
         if (cur_level != player.level)
