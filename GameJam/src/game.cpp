@@ -83,7 +83,6 @@ bool Game::OnUserUpdate(float fElapsedTime)
 
         menu.on_input();
         menu.on_render();
-
         menu.reset();
 
         return true;
@@ -118,7 +117,7 @@ bool Game::OnUserUpdate(float fElapsedTime)
         if (start_time == 0)
             start_time = GetTickCount();
 
-        if ((GetTickCount() - start_time) >= 1000)
+        if ((GetTickCount() - start_time) >= 50)
         {
             timer -= 1;
             start_time = GetTickCount(); // reset start_time to recount 1 second
@@ -127,7 +126,7 @@ bool Game::OnUserUpdate(float fElapsedTime)
         menu.add_text({ 10, 5 }, "TIME LEFT: " + std::to_string(timer), false);
 
         if (timer == 0)
-            game_state = game_states::EXIT_GAME;
+            game_state = game_states::FAIL_GAME;
         // end of timer
 
         // run the main game.
@@ -155,6 +154,39 @@ bool Game::OnUserUpdate(float fElapsedTime)
         // pause menu.
         if (GetKey(olc::ESCAPE).bPressed)
             game_state = game_states::MAIN_MENU;
+
+        return true;
+
+    case game_states::FAIL_GAME:
+        menu.add_text({ ((ScreenWidth() / 2.f)), ((ScreenHeight() / 2.f) - 23.f) }, "Game over.", true);
+        menu.add_button({ ((ScreenWidth() / 2.f) - 50.f), ((ScreenHeight() / 2.f) - 10.f) }, { 100, 20 }, "Retry", true, [&]()
+        {
+            game_state = game_states::START_GAME;
+        });
+
+        menu.add_button({ ((ScreenWidth() / 2.f) - 50.f), ((ScreenHeight() / 2.f) + 13.f) }, { 100, 20 }, "Main menu", true, [&]()
+        {
+            in_game = false;
+            game_state = game_states::MAIN_MENU;
+        });
+
+        menu.on_input();
+        menu.on_render();
+        menu.reset();
+
+        return true;
+
+    case game_states::WIN_GAME:
+        menu.add_text({ ((ScreenWidth() / 2.f)), ((ScreenHeight() / 2.f) - 23.f) }, "WINNER WINNER CHICKEN DINNER", true);
+        menu.add_button({ ((ScreenWidth() / 2.f) - 50.f), ((ScreenHeight() / 2.f) - 10.f) }, { 100, 20 }, "Continue", true, [&]()
+        {
+            in_game = false;
+            game_state = game_states::MAIN_MENU;
+        });
+
+        menu.on_input();
+        menu.on_render();
+        menu.reset();
 
         return true;
 

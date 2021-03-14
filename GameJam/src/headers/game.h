@@ -24,6 +24,8 @@ public:
         START_GAME,
         END_GAME,
         GAMEPLAY,
+        FAIL_GAME,
+        WIN_GAME,
         EXIT_GAME
     };
 
