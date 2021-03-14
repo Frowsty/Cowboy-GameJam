@@ -131,9 +131,9 @@ bool Game::OnUserUpdate(float fElapsedTime)
         // end of timer
 
         // run the main game.
-        if (GetTickCount() - player.pickup_time <= 1250)
-            menu.add_text({ player.position.x + (player.size.x / 2), player.position.y - 10 }, player.holding_key ? player.did_interact ? "Already have a key" : "Picked up a key" : player.wrong_key ? "Wrong key" : player.has_correct_key ? "Key found" : player.holding_key && player.did_interact ? "Already have a key" : "", true);
-        
+        if ((player.holding_key || player.wrong_key || player.has_correct_key) && GetTickCount() - player.pickup_time <= 1250)
+            menu.add_text({ player.position.x + (player.size.x / 2), player.position.y - 10 }, player.holding_key ? "Picked up a key" : player.wrong_key ? "Wrong key" : player.has_correct_key ? "Key found" : "", true);
+
         // run most of the game logic and rendering
         map.render();
         player.update();
@@ -145,13 +145,17 @@ bool Game::OnUserUpdate(float fElapsedTime)
             menu.reset();
         }
 
-        // Advance to next level if current one is different from the players level
-        if (cur_level != player.level)
-            game_state = game_states::START_GAME;
-
         // pause menu.
         if (GetKey(olc::ESCAPE).bPressed)
             game_state = game_states::MAIN_MENU;
+
+        // Add slight delay before switching level
+        while (GetTickCount() - player.pickup_time <= 1250)
+            return true;
+
+        // Advance to next level if current one is different from the players level
+        if (cur_level != player.level)
+            game_state = game_states::START_GAME;
 
         return true;
 
