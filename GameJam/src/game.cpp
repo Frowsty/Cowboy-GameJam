@@ -87,7 +87,7 @@ bool Game::OnUserUpdate(float fElapsedTime)
         switch (cur_level)
         {
         case 1: map.loadMap("./sprites/map1.json"); break;
-        case 2: map.loadMap("./sprites/map1.json"); break;
+        case 2: map.loadMap("./sprites/map2.json"); break;
         case 3: map.loadMap("./sprites/map1.json"); break;
         }
 
