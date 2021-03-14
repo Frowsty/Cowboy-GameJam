@@ -175,6 +175,7 @@ bool Player::run_collision()
             else if (name.compare("new_level") == 0 && has_key)
             {
                 level++;
+                std::cout << "NEXT LEVEL UNLOCKED\n";
                 return false;
             }
             else if (name.compare("obstacle") == 0)

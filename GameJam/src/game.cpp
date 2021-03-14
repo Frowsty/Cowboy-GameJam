@@ -29,7 +29,7 @@ bool Game::OnUserUpdate(float fElapsedTime)
 
     case game_states::MAIN_MENU:
         // push all menu elements to the vector.
-        menu.add_text({ ((float(ScreenWidth()) / 2) - 50), ((float(ScreenHeight()) / 2) - 23) }, !in_game ? "Cowboy game jam." : "Paused.");
+        menu.add_text({ ((float(ScreenWidth()) / 2)), ((float(ScreenHeight()) / 2) - 23) }, !in_game ? "Cowboy game jam." : "Paused.", true);
         menu.add_button({ ((float(ScreenWidth()) / 2) - 50), ((float(ScreenHeight()) / 2) - 10) }, { 100, 20 }, !in_game ? "Play" : "Continue", [&]()
         { 
             game_state = !in_game ? game_states::START_GAME : game_states::GAMEPLAY;
@@ -60,10 +60,11 @@ bool Game::OnUserUpdate(float fElapsedTime)
         return true;
 
     case game_states::SETTINGS_MENU:
-        menu.add_text({ ((float(ScreenWidth()) / 2) - 50), ((float(ScreenHeight()) / 2) - 23) }, "Move left: Left arrow key");
-        menu.add_text({ ((float(ScreenWidth()) / 2) - 50), ((float(ScreenHeight()) / 2) - 10) }, "Move right: Right arrow key");
-        menu.add_text({ ((float(ScreenWidth()) / 2) - 50), ((float(ScreenHeight()) / 2) + 3) }, "Jump: Up arrow key/Space");
-        menu.add_button({ ((float(ScreenWidth()) / 2) - 50), ((float(ScreenHeight()) / 2) + 16) }, { 100, 20 }, "Back", [&]()
+        menu.add_text({ ((float(ScreenWidth()) / 2)), ((float(ScreenHeight()) / 2) - 23) }, "Move left: Left arrow key", true);
+        menu.add_text({ ((float(ScreenWidth()) / 2)), ((float(ScreenHeight()) / 2) - 10) }, "Move right: Right arrow key", true);
+        menu.add_text({ ((float(ScreenWidth()) / 2)), ((float(ScreenHeight()) / 2) + 3) }, "Jump: Up arrow key/Space", true);
+        menu.add_text({ ((float(ScreenWidth()) / 2)), ((float(ScreenHeight()) / 2) + 16) }, "Double jump: Double press the jump key.", true);
+        menu.add_button({ ((float(ScreenWidth()) / 2) - 50), ((float(ScreenHeight()) / 2) + 29) }, { 100, 20 }, "Back", [&]()
         {
             game_state = game_states::MAIN_MENU;
         });

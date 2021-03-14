@@ -20,6 +20,7 @@ struct element
 		std::string m_text;
 		element_state m_state;
 		std::function<void()> m_callback;
+		bool m_center;
 
 		element() = default;
 		virtual ~element() = default;
@@ -30,10 +31,11 @@ struct element
 
 struct element_text : public element 
 {
-		element_text(olc::vf2d pos, std::string text) 
+		element_text(olc::vf2d pos, std::string text, bool center) 
 		{
 				m_pos = pos;
 				m_text = text;
+				m_center = center;
 		}
 
 		~element_text() = default;
@@ -42,7 +44,12 @@ struct element_text : public element
 
 		void on_render(olc::PixelGameEngine* pge) override 
 		{
-				pge->DrawString(m_pos, m_text);
+				auto text_pos = m_pos;
+
+				if (m_center)
+						text_pos.x -= (pge->GetTextSize(m_text).x / 2);
+
+				pge->DrawString(text_pos, m_text);
 		}
 };
 
@@ -103,9 +110,9 @@ public:
 				m_pge = pge;
 		}
 
-		void add_text(const olc::vf2d& pos, const std::string& text) 
+		void add_text(const olc::vf2d& pos, const std::string& text, bool centered) 
 		{
-				m_elms.push_back(std::make_shared<element_text>(pos, text));
+				m_elms.push_back(std::make_shared<element_text>(pos, text, centered));
 		}
 
 		void add_button(const olc::vf2d& pos, const olc::vf2d& size, const std::string& text, std::function<void()> callback = nullptr) 

@@ -16,6 +16,7 @@ void Map::loadMap(const std::string& path)
     int tile_sheet_width = sprite_sheet.Sprite()->width / tile_size.x;
     auto layers = j.at("layers");
 
+    srand(time(NULL));
     int random_key = rand() % 7 + 1;
     int key_id = 1;
     // Loop all the layers that we grab from the json file
@@ -79,6 +80,7 @@ void Map::loadMap(const std::string& path)
                         collidable_tiles.push_back(std::make_pair("correct_key", tiles.back()));
                     else
                         collidable_tiles.push_back(std::make_pair("collectable", tiles.back()));
+
                     key_id++;
                 }
             }
