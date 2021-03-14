@@ -5,7 +5,7 @@
 #include "map.h"
 #include "menu.h"
 
-#define TIMER 180
+#define TIMER 150
 
 class Game : public olc::PixelGameEngine
 {

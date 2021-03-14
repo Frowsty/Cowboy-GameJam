@@ -54,7 +54,7 @@ bool Game::OnUserUpdate(float fElapsedTime)
             }
         });
 
-        menu.add_text({ 5, 627 }, "Made by Kian and Daniel 2021", false);
+        menu.add_text({ 5, 627 }, "Made by Kian and Frosty 2021", false);
 
         // update input and render.
         menu.on_input();
@@ -97,7 +97,7 @@ bool Game::OnUserUpdate(float fElapsedTime)
         {
         case 1: map.loadMap("./sprites/map1.json"); break;
         case 2: map.loadMap("./sprites/map2.json"); break;
-        case 3: map.loadMap("./sprites/map1.json"); break;
+        case 3: game_state = game_states::WIN_GAME; break;
         }
 
         // setup the local player and load in resources.
