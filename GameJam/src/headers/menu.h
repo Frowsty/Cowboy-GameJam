@@ -55,11 +55,12 @@ struct element_text : public element
 
 struct element_button : public element 
 {
-		element_button(olc::vf2d pos, olc::vf2d size, std::string text, std::function<void()> callback) 
+		element_button(olc::vf2d pos, olc::vf2d size, std::string text, bool center, std::function<void()> callback)
 		{
 				m_pos = pos;
 				m_size = size;
 				m_text = text;
+				m_center = center;
 				m_state = element_state::IDLE;
 				m_callback = callback;
 		}
@@ -91,7 +92,11 @@ struct element_button : public element
 				else if (m_state == element_state::ACTIVE)
 						pge->FillRect(m_pos, m_size, olc::VERY_DARK_GREY);
 		
-				olc::vf2d text_pos = (m_pos + (m_size / 2) - (pge->GetTextSize(m_text) / 2));
+				olc::vf2d text_pos = {
+						m_center ? (m_pos.x + (m_size.x / 2) - (pge->GetTextSize(m_text).x / 2)) : m_pos.x + 5,
+						(m_pos.y + (m_size.y / 2) - (pge->GetTextSize(m_text).y / 2))
+				};
+
 				pge->DrawString(text_pos, m_text);
 		}
 };
@@ -115,9 +120,9 @@ public:
 				m_elms.push_back(std::make_shared<element_text>(pos, text, centered));
 		}
 
-		void add_button(const olc::vf2d& pos, const olc::vf2d& size, const std::string& text, std::function<void()> callback = nullptr) 
-		{
-				m_elms.push_back(std::make_shared<element_button>(pos, size, text, callback));
+		void add_button(const olc::vf2d& pos, const olc::vf2d& size, const std::string& text, bool centered, std::function<void()> callback = nullptr)
+		{			
+				m_elms.push_back(std::make_shared<element_button>(pos, size, text, centered, callback));
 		}
 
 		void on_input() 
