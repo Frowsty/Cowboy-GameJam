@@ -108,7 +108,7 @@ void Player::movement()
         }
     }
 
-    if (((m_pge->GetKey(olc::UP).bPressed || m_pge->GetKey(olc::SPACE).bPressed) || did_jump) && on_ground)
+    if ((m_pge->GetKey(olc::UP).bPressed || did_jump) && on_ground)
     {
         if (!did_jump)
             jump_pos = position;
@@ -129,6 +129,8 @@ void Player::movement()
         else
         {
             on_ground = true;
+            double_jump = false;
+            jump_height = 64;
             new_position.y = position.y;
         }
     }
@@ -136,11 +138,6 @@ void Player::movement()
     // Set idle animation after no movement has been made for x time
     if (GetTickCount() - last_movement_tick > 10)
         set_idle_sprite(last_direction);
-}
-
-void Player::interaction()
-{
-    
 }
 
 bool Player::check_collision(const Map::tile& left)
@@ -151,6 +148,16 @@ bool Player::check_collision(const Map::tile& left)
         && left.position.y < new_position.y + size.y + 1;
 }
 
+void Player::interaction()
+{
+    if (m_pge->GetKey(olc::DOWN).bReleased || m_pge->GetKey(olc::DOWN).bPressed)
+    {
+        did_interact = true;
+        run_collision();
+    }
+    did_interact = false;
+}
+
 bool Player::run_collision()
 {
     for (auto& [name, tile] : *collidable_tiles)
@@ -159,12 +166,12 @@ bool Player::run_collision()
             continue;
 
 
-        m_pge->DrawRect(tile->position, { 32, 32 }, olc::RED);
+        //m_pge->DrawRect(tile->position, { 32, 32 }, olc::RED);
 
 
         if (check_collision(*tile))
         {
-            if (name.compare("collectable") == 0 && !holding_key)
+            if (name.compare("collectable") == 0 && !holding_key && did_interact)
             {
                 tile->destroyed = true;
                 holding_key = true;
@@ -172,16 +179,16 @@ bool Player::run_collision()
                 pickup_time = GetTickCount();
                 return false;
             }
-            else if (name.compare("correct_key") == 0 && !holding_key)
+            else if (name.compare("correct_key") == 0 && !holding_key && did_interact)
             {
+                tile->destroyed = true;
                 has_correct_key = true;
                 holding_key = true;
                 wrong_key = false;
                 pickup_time = GetTickCount();
-                tile->destroyed = true;
                 return false;
             }
-            else if (name.compare("next_level") == 0 && holding_key)
+            else if (name.compare("next_level") == 0 && holding_key && did_interact)
             {
                 if (has_correct_key)
                 {

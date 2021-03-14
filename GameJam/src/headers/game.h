@@ -5,6 +5,8 @@
 #include "map.h"
 #include "menu.h"
 
+#define TIMER 180
+
 class Game : public olc::PixelGameEngine
 {
 public:
@@ -38,4 +40,6 @@ private:
     Menu menu;
     bool in_game;
     int cur_level;
+    float start_time;
+    int timer;
 };

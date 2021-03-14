@@ -7,6 +7,8 @@ void Game::setup(olc::PixelGameEngine* pge)
     map.m_pge = pge;
     in_game = false;
     cur_level = player.level;
+    start_time = 0;
+    timer = TIMER;
     game_state = game_states::SPLASHSCREEN;
 }
 
@@ -79,6 +81,8 @@ bool Game::OnUserUpdate(float fElapsedTime)
 
     case game_states::START_GAME:
         cur_level = player.level;
+        start_time = 0;
+        timer = TIMER;
         // setup the map data and load in the first map.
         switch (cur_level)
         {
@@ -101,10 +105,26 @@ bool Game::OnUserUpdate(float fElapsedTime)
         return true;
 
     case game_states::GAMEPLAY:
-        // run the main game.
-      if ((player.holding_key || player.wrong_key || player.has_correct_key) && GetTickCount() - player.pickup_time <= 1250)
-          menu.add_text({ player.position.x + (player.size.x / 2), player.position.y - 10 }, player.holding_key ? "Picked up a key" : player.wrong_key ? "Wrong key" : player.has_correct_key ? "Key found" : "", true);
+        // timer related stuff
+        if (start_time == 0)
+            start_time = GetTickCount();
 
+        if ((GetTickCount() - start_time) >= 1000)
+        {
+            timer -= 1;
+            start_time = GetTickCount(); // reset start_time to recount 1 second
+        }
+        menu.add_text({ 10, 5 }, "TIME LEFT: " + std::to_string(timer), false);
+
+        if (timer == 0)
+            game_state = game_states::EXIT_GAME;
+        // end of timer
+
+        // run the main game.
+        if ((player.holding_key || player.wrong_key || player.has_correct_key) && GetTickCount() - player.pickup_time <= 1250)
+            menu.add_text({ player.position.x + (player.size.x / 2), player.position.y - 10 }, player.holding_key ? "Picked up a key" : player.wrong_key ? "Wrong key" : player.has_correct_key ? "Key found" : "", true);
+        
+        // run most of the game logic and rendering
         map.render();
         player.update();
 
