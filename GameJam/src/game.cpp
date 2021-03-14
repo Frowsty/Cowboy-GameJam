@@ -32,7 +32,7 @@ bool Game::OnUserUpdate(float fElapsedTime)
 
     case game_states::MAIN_MENU:
         // push all menu elements to the vector.
-        menu.add_text({ ((ScreenWidth() / 2.f)), ((ScreenHeight() / 2.f) - 23.f) }, !in_game ? "Cowboy game jam." : "Paused.", true);
+        menu.add_text({ ((ScreenWidth() / 2.f)), ((ScreenHeight() / 2.f) - 23.f) }, !in_game ? "Cowboy game jam. 2021" : "Paused.", true);
         menu.add_button({ ((ScreenWidth() / 2.f) - 50.f), ((ScreenHeight() / 2.f) - 10.f) }, { 100, 20 }, !in_game ? "Play" : "Continue", true, [&]()
         { 
             game_state = !in_game ? game_states::START_GAME : game_states::GAMEPLAY;
@@ -65,6 +65,11 @@ bool Game::OnUserUpdate(float fElapsedTime)
         return true;
 
     case game_states::SETTINGS_MENU:
+        menu.add_text({ ((ScreenWidth() / 2.f)), ((ScreenHeight() / 2.f) - 100.f) }, "About:", true);
+        menu.add_text({ ((ScreenWidth() / 2.f)), ((ScreenHeight() / 2.f) - 87.f) }, "You must collect the correct key for the chest to progress to the next area.", true);
+        menu.add_text({ ((ScreenWidth() / 2.f)), ((ScreenHeight() / 2.f) - 74.f) }, "Make sure you are hastey though as you only have 150 seconds to complete this task.", true);
+        menu.add_text({ ((ScreenWidth() / 2.f)), ((ScreenHeight() / 2.f) - 61.f) }, "Nots: You may only carry one key at a time.", true);
+
         menu.add_text({ ((ScreenWidth() / 2.f)), ((ScreenHeight() / 2.f) - 23.f) }, "Move left: Left arrow key", true);
         menu.add_text({ ((ScreenWidth() / 2.f)), ((ScreenHeight() / 2.f) - 10.f) }, "Move right: Right arrow key", true);
         menu.add_text({ ((ScreenWidth() / 2.f)), ((ScreenHeight() / 2.f) + 3.f) }, "Jump: Up arrow key/Space", true);
@@ -73,6 +78,8 @@ bool Game::OnUserUpdate(float fElapsedTime)
         {
             game_state = game_states::MAIN_MENU;
         });
+
+        menu.add_text({ 5, 627 }, "Made by Kian and Daniel 2021", false);
 
         menu.on_input();
         menu.on_render();
