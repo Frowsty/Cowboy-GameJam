@@ -37,4 +37,5 @@ private:
     Map map;
     Menu menu;
     bool in_game;
+    int cur_level;
 };

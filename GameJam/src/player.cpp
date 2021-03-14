@@ -154,9 +154,9 @@ bool Player::run_collision()
         if (tile->destroyed)
             continue;
 
-#ifdef _DEBUG
+
         m_pge->DrawRect(tile->position, { 32, 32 }, olc::RED);
-#endif
+
 
         if (check_collision(*tile))
         {
@@ -170,12 +170,13 @@ bool Player::run_collision()
                 has_key = true;
                 tile->destroyed = true;
                 // display text for x seconds that player has received the correct key
-                std::cout << has_key << '\n';
+                return false;
             }
-            else if (name.compare("new_level") == 0 && has_key)
+            else if (name.compare("next_level") == 0 && has_key)
             {
+                tile->destroyed = true;
                 level++;
-                std::cout << "NEXT LEVEL UNLOCKED\n";
+                has_key = false;
                 return false;
             }
             else if (name.compare("obstacle") == 0)

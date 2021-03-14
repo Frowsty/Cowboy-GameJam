@@ -6,6 +6,7 @@ void Game::setup(olc::PixelGameEngine* pge)
     player.m_pge = pge;
     map.m_pge = pge;
     in_game = false;
+    cur_level = player.level;
     game_state = game_states::SPLASHSCREEN;
 }
 
@@ -77,8 +78,14 @@ bool Game::OnUserUpdate(float fElapsedTime)
         return true;
 
     case game_states::START_GAME:
+        cur_level = player.level;
         // setup the map data and load in the first map.
-        map.loadMap("./sprites/map1.json");
+        switch (cur_level)
+        {
+        case 1: map.loadMap("./sprites/map1.json"); break;
+        case 2: map.loadMap("./sprites/map1.json"); break;
+        case 3: map.loadMap("./sprites/map1.json"); break;
+        }
 
         // setup the local player and load in resources.
         player.create();
@@ -97,6 +104,10 @@ bool Game::OnUserUpdate(float fElapsedTime)
         // run the main game.
         map.render();
         player.update();
+
+        // Advance to next level if current one is different from the players level
+        if (cur_level != player.level)
+            game_state = game_states::START_GAME;
 
         // pause menu.
         if (GetKey(olc::ESCAPE).bPressed)
