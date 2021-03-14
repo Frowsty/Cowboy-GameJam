@@ -117,7 +117,7 @@ bool Game::OnUserUpdate(float fElapsedTime)
         if (start_time == 0)
             start_time = GetTickCount();
 
-        if ((GetTickCount() - start_time) >= 50)
+        if ((GetTickCount() - start_time) >= 1000)
         {
             timer -= 1;
             start_time = GetTickCount(); // reset start_time to recount 1 second
