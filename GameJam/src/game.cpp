@@ -32,18 +32,18 @@ bool Game::OnUserUpdate(float fElapsedTime)
 
     case game_states::MAIN_MENU:
         // push all menu elements to the vector.
-        menu.add_text({ ((float(ScreenWidth()) / 2)), ((float(ScreenHeight()) / 2) - 23) }, !in_game ? "Cowboy game jam." : "Paused.", true);
-        menu.add_button({ ((float(ScreenWidth()) / 2) - 50), ((float(ScreenHeight()) / 2) - 10) }, { 100, 20 }, !in_game ? "Play" : "Continue", true, [&]()
+        menu.add_text({ ((ScreenWidth() / 2.f)), ((ScreenHeight() / 2.f) - 23.f) }, !in_game ? "Cowboy game jam. 2021" : "Paused.", true);
+        menu.add_button({ ((ScreenWidth() / 2.f) - 50.f), ((ScreenHeight() / 2.f) - 10.f) }, { 100, 20 }, !in_game ? "Play" : "Continue", true, [&]()
         { 
             game_state = !in_game ? game_states::START_GAME : game_states::GAMEPLAY;
         });
 
-        menu.add_button({ ((float(ScreenWidth()) / 2) - 50), ((float(ScreenHeight()) / 2) + 15) }, { 100, 20 }, "How to play", true, [&]()
+        menu.add_button({ ((ScreenWidth() / 2.f) - 50.f), ((ScreenHeight() / 2.f) + 15.f) }, { 100, 20 }, "How to play", true, [&]()
         {
             game_state = game_states::SETTINGS_MENU;
         });
 
-        menu.add_button({ ((float(ScreenWidth()) / 2) - 50), ((float(ScreenHeight()) / 2) + 40) }, { 100, 20 }, !in_game ? "Exit" : "Quit game", true, [&]()
+        menu.add_button({ ((ScreenWidth() / 2.f) - 50.f), ((ScreenHeight() / 2.f) + 40.f) }, { 100, 20 }, !in_game ? "Exit" : "Quit game", true, [&]()
         { 
             if (!in_game)
                 game_state = game_states::EXIT_GAME;
@@ -54,6 +54,8 @@ bool Game::OnUserUpdate(float fElapsedTime)
             }
         });
 
+        menu.add_text({ 5, 627 }, "Made by Kian and Daniel 2021", false);
+
         // update input and render.
         menu.on_input();
         menu.on_render();
@@ -63,18 +65,24 @@ bool Game::OnUserUpdate(float fElapsedTime)
         return true;
 
     case game_states::SETTINGS_MENU:
-        menu.add_text({ ((float(ScreenWidth()) / 2)), ((float(ScreenHeight()) / 2) - 23) }, "Move left: Left arrow key", true);
-        menu.add_text({ ((float(ScreenWidth()) / 2)), ((float(ScreenHeight()) / 2) - 10) }, "Move right: Right arrow key", true);
-        menu.add_text({ ((float(ScreenWidth()) / 2)), ((float(ScreenHeight()) / 2) + 3) }, "Jump: Up arrow key/Space", true);
-        menu.add_text({ ((float(ScreenWidth()) / 2)), ((float(ScreenHeight()) / 2) + 16) }, "Double jump: Double press the jump key.", true);
-        menu.add_button({ ((float(ScreenWidth()) / 2) - 50), ((float(ScreenHeight()) / 2) + 29) }, { 100, 20 }, "Back", true, [&]()
+        menu.add_text({ ((ScreenWidth() / 2.f)), ((ScreenHeight() / 2.f) - 100.f) }, "About:", true);
+        menu.add_text({ ((ScreenWidth() / 2.f)), ((ScreenHeight() / 2.f) - 87.f) }, "You must collect the correct key for the chest to progress to the next area.", true);
+        menu.add_text({ ((ScreenWidth() / 2.f)), ((ScreenHeight() / 2.f) - 74.f) }, "Make sure you are hastey though as you only have 150 seconds to complete this task.", true);
+        menu.add_text({ ((ScreenWidth() / 2.f)), ((ScreenHeight() / 2.f) - 61.f) }, "Nots: You may only carry one key at a time.", true);
+
+        menu.add_text({ ((ScreenWidth() / 2.f)), ((ScreenHeight() / 2.f) - 23.f) }, "Move left: Left arrow key", true);
+        menu.add_text({ ((ScreenWidth() / 2.f)), ((ScreenHeight() / 2.f) - 10.f) }, "Move right: Right arrow key", true);
+        menu.add_text({ ((ScreenWidth() / 2.f)), ((ScreenHeight() / 2.f) + 3.f) }, "Jump: Up arrow key/Space", true);
+        menu.add_text({ ((ScreenWidth() / 2.f)), ((ScreenHeight() / 2.f) + 16.f) }, "Double jump: Double press the jump key.", true);
+        menu.add_button({ ((ScreenWidth() / 2.f) - 50.f), ((ScreenHeight() / 2.f) + 29.f) }, { 100, 20 }, "Back", true, [&]()
         {
             game_state = game_states::MAIN_MENU;
         });
 
+        menu.add_text({ 5, 627 }, "Made by Kian and Daniel 2021", false);
+
         menu.on_input();
         menu.on_render();
-
         menu.reset();
 
         return true;
@@ -110,20 +118,21 @@ bool Game::OnUserUpdate(float fElapsedTime)
         if (start_time == 0)
             start_time = GetTickCount();
 
-        if ((GetTickCount() - start_time) >= 1000)
+        if ((GetTickCount() - start_time) >= 50)
         {
             timer -= 1;
             start_time = GetTickCount(); // reset start_time to recount 1 second
         }
+
         menu.add_text({ 10, 5 }, "TIME LEFT: " + std::to_string(timer), false);
 
         if (timer == 0)
-            game_state = game_states::EXIT_GAME;
+            game_state = game_states::FAIL_GAME;
         // end of timer
 
         // run the main game.
-        if ((player.holding_key || player.wrong_key || player.has_correct_key) && GetTickCount() - player.pickup_time <= 1250)
-            menu.add_text({ player.position.x + (player.size.x / 2), player.position.y - 10 }, player.holding_key ? "Picked up a key" : player.wrong_key ? "Wrong key" : player.has_correct_key ? "Key found" : "", true);
+        if (GetTickCount() - player.pickup_time <= 1250)
+            menu.add_text({ player.position.x + (player.size.x / 2), player.position.y - 10 }, player.holding_key ? player.did_interact ? "Already have a key" : "Picked up a key" : player.wrong_key ? "Wrong key" : player.has_correct_key ? "Key found" : player.holding_key && player.did_interact ? "Already have a key" : "", true);
         
         // run most of the game logic and rendering
         map.render();
@@ -131,6 +140,7 @@ bool Game::OnUserUpdate(float fElapsedTime)
 
         if (menu.has_elements())
         {
+            FillRectDecal({ 7, 2 }, { GetTextSize("TIME LEFT: " + std::to_string(timer)).x + 8.f, GetTextSize("TIME LEFT: " + std::to_string(timer)).y + 5.f }, olc::BLACK);
             menu.on_render();
             menu.reset();
         }
@@ -145,9 +155,43 @@ bool Game::OnUserUpdate(float fElapsedTime)
 
         return true;
 
+    case game_states::FAIL_GAME:
+        menu.add_text({ ((ScreenWidth() / 2.f)), ((ScreenHeight() / 2.f) - 23.f) }, "Game over.", true);
+        menu.add_button({ ((ScreenWidth() / 2.f) - 50.f), ((ScreenHeight() / 2.f) - 10.f) }, { 100, 20 }, "Retry", true, [&]()
+        {
+            game_state = game_states::START_GAME;
+        });
+
+        menu.add_button({ ((ScreenWidth() / 2.f) - 50.f), ((ScreenHeight() / 2.f) + 13.f) }, { 100, 20 }, "Main menu", true, [&]()
+        {
+            in_game = false;
+            game_state = game_states::MAIN_MENU;
+        });
+
+        menu.on_input();
+        menu.on_render();
+        menu.reset();
+
+        return true;
+
+    case game_states::WIN_GAME:
+        menu.add_text({ ((ScreenWidth() / 2.f)), ((ScreenHeight() / 2.f) - 23.f) }, "WINNER WINNER CHICKEN DINNER", true);
+        menu.add_button({ ((ScreenWidth() / 2.f) - 50.f), ((ScreenHeight() / 2.f) - 10.f) }, { 100, 20 }, "Continue", true, [&]()
+        {
+            in_game = false;
+            game_state = game_states::MAIN_MENU;
+        });
+
+        menu.on_input();
+        menu.on_render();
+        menu.reset();
+
+        return true;
+
     case game_states::EXIT_GAME:
         // exit the game.
-        return false;    
+        return false;
+
     default:
         return true;
     }
