@@ -67,7 +67,7 @@ bool Game::OnUserUpdate(float fElapsedTime)
     case game_states::SETTINGS_MENU:
         menu.add_text({ ((ScreenWidth() / 2.f)), ((ScreenHeight() / 2.f) - 100.f) }, "About:", true);
         menu.add_text({ ((ScreenWidth() / 2.f)), ((ScreenHeight() / 2.f) - 87.f) }, "You must collect the correct key for the chest to progress to the next area.", true);
-        menu.add_text({ ((ScreenWidth() / 2.f)), ((ScreenHeight() / 2.f) - 74.f) }, "Make sure you are hastey though as you only have 150 seconds to complete this task.", true);
+        menu.add_text({ ((ScreenWidth() / 2.f)), ((ScreenHeight() / 2.f) - 74.f) }, "Make sure you are hastey though as you only have 180 seconds to complete this task.", true);
         menu.add_text({ ((ScreenWidth() / 2.f)), ((ScreenHeight() / 2.f) - 61.f) }, "Nots: You may only carry one key at a time.", true);
 
         menu.add_text({ ((ScreenWidth() / 2.f)), ((ScreenHeight() / 2.f) - 23.f) }, "Move left: Left arrow key", true);
@@ -131,8 +131,11 @@ bool Game::OnUserUpdate(float fElapsedTime)
         // end of timer
 
         // run the main game.
-        if ((player.holding_key || player.wrong_key || player.has_correct_key) && GetTickCount() - player.pickup_time <= 1250)
+        if (GetTickCount() - player.pickup_time <= 1250) 
             menu.add_text({ player.position.x + (player.size.x / 2), player.position.y - 10 }, player.holding_key ? "Picked up a key" : player.wrong_key ? "Wrong key" : player.has_correct_key ? "Key found" : "", true);
+             
+        if (player.holding_key && GetTickCount() - player.interact_time <= 1250 && GetTickCount() - player.pickup_time >= 1250)
+            menu.add_text({ player.position.x + (player.size.x / 2), player.position.y - 10 }, "Inventory full", true);
 
         // run most of the game logic and rendering
         map.render();
@@ -172,6 +175,8 @@ bool Game::OnUserUpdate(float fElapsedTime)
             game_state = game_states::MAIN_MENU;
         });
 
+        menu.add_text({ 5, 627 }, "Made by Kian and Daniel 2021", false);
+
         menu.on_input();
         menu.on_render();
         menu.reset();
@@ -185,6 +190,8 @@ bool Game::OnUserUpdate(float fElapsedTime)
             in_game = false;
             game_state = game_states::MAIN_MENU;
         });
+
+        menu.add_text({ 5, 627 }, "Made by Kian and Daniel 2021", false);
 
         menu.on_input();
         menu.on_render();

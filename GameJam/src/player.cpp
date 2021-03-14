@@ -155,6 +155,7 @@ void Player::interaction()
     if (m_pge->GetKey(olc::DOWN).bReleased || m_pge->GetKey(olc::DOWN).bPressed)
     {
         did_interact = true;
+        interact_time = GetTickCount();
         run_collision();
     }    
 }

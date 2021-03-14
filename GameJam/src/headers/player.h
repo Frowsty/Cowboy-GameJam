@@ -17,6 +17,7 @@ public:
     bool holding_key = false;
     bool wrong_key = false;
     bool did_interact = false;
+    int interact_time = 0;
     int pickup_time = 0;
     int jump_height = 64;
     int level = 1;
