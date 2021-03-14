@@ -84,7 +84,7 @@ void Player::movement()
     // Run jump movement smoothly until we reach the top before we start the gravity fall again
     if (did_jump)
     {
-        if ((m_pge->GetKey(olc::UP).bPressed || m_pge->GetKey(olc::SPACE).bPressed) && !double_jump)
+        if (m_pge->GetKey(olc::UP).bPressed && !double_jump)
         {
             double_jump = true;
             jump_height = 128;
@@ -150,12 +150,13 @@ bool Player::check_collision(const Map::tile& left)
 
 void Player::interaction()
 {
+    did_interact = false;
+
     if (m_pge->GetKey(olc::DOWN).bReleased || m_pge->GetKey(olc::DOWN).bPressed)
     {
         did_interact = true;
         run_collision();
-    }
-    did_interact = false;
+    }    
 }
 
 bool Player::run_collision()
