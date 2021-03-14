@@ -32,6 +32,10 @@ void Player::create()
     start_position = { 64, 600 };
     position = start_position;
     new_position = start_position;
+
+    holding_key = false;
+    wrong_key = false;
+    has_correct_key = false;
 }
 
 void Player::set_idle_sprite(int direction)
@@ -160,23 +164,32 @@ bool Player::run_collision()
 
         if (check_collision(*tile))
         {
-            if (name.compare("collectable") == 0)
+            if (name.compare("collectable") == 0 && !holding_key)
             {
+                tile->destroyed = true;
+                holding_key = true;
+                return false;
+            }
+            else if (name.compare("correct_key") == 0 && !holding_key)
+            {
+                has_correct_key = true;
+                holding_key = true;
                 tile->destroyed = true;
                 return false;
             }
-            else if (name.compare("correct_key") == 0)
+            else if (name.compare("next_level") == 0 && holding_key)
             {
-                has_key = true;
-                tile->destroyed = true;
-                // display text for x seconds that player has received the correct key
-                return false;
-            }
-            else if (name.compare("next_level") == 0 && has_key)
-            {
-                tile->destroyed = true;
-                level++;
-                has_key = false;
+                if (has_correct_key)
+                {
+                    tile->destroyed = true;
+                    level++;
+                    has_correct_key = false;
+                }
+                else
+                {
+                    wrong_key = true;
+                    holding_key = false;
+                }
                 return false;
             }
             else if (name.compare("obstacle") == 0)

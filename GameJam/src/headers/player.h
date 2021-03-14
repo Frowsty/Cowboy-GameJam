@@ -13,7 +13,9 @@ public:
     bool did_jump = false;
     bool double_jump = false;
     bool on_ground = false;
-    bool has_key = false;
+    bool has_correct_key = false;
+    bool holding_key = false;
+    bool wrong_key = false;
     int jump_height = 64;
     int level = 1;
     olc::vf2d jump_pos;
