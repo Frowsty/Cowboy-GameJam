@@ -16,6 +16,7 @@ public:
     bool has_correct_key = false;
     bool holding_key = false;
     bool wrong_key = false;
+    int pickup_time = 0;
     int jump_height = 64;
     int level = 1;
     olc::vf2d jump_pos;

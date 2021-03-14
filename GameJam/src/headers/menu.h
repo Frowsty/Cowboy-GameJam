@@ -49,7 +49,7 @@ struct element_text : public element
 				if (m_center)
 						text_pos.x -= (pge->GetTextSize(m_text).x / 2);
 
-				pge->DrawString(text_pos, m_text);
+				pge->DrawStringDecal(text_pos, m_text);
 		}
 };
 
@@ -86,18 +86,18 @@ struct element_button : public element
 		void on_render(olc::PixelGameEngine* pge) override 
 		{
 				if (m_state == element_state::IDLE)
-						pge->FillRect(m_pos, m_size, olc::DARK_GREY);
+						pge->FillRectDecal(m_pos, m_size, olc::DARK_GREY);
 				else if (m_state == element_state::HOVER)
-						pge->FillRect(m_pos, m_size, olc::GREY);
+						pge->FillRectDecal(m_pos, m_size, olc::GREY);
 				else if (m_state == element_state::ACTIVE)
-						pge->FillRect(m_pos, m_size, olc::VERY_DARK_GREY);
+						pge->FillRectDecal(m_pos, m_size, olc::VERY_DARK_GREY);
 		
 				olc::vf2d text_pos = {
 						m_center ? (m_pos.x + (m_size.x / 2) - (pge->GetTextSize(m_text).x / 2)) : m_pos.x + 5,
 						(m_pos.y + (m_size.y / 2) - (pge->GetTextSize(m_text).y / 2))
 				};
 
-				pge->DrawString(text_pos, m_text);
+				pge->DrawStringDecal(text_pos, m_text);
 		}
 };
 
@@ -123,6 +123,10 @@ public:
 		void add_button(const olc::vf2d& pos, const olc::vf2d& size, const std::string& text, bool centered, std::function<void()> callback = nullptr)
 		{			
 				m_elms.push_back(std::make_shared<element_button>(pos, size, text, centered, callback));
+		}
+
+		bool has_elements() const {
+			return m_elms.empty() == false;
 		}
 
 		void on_input() 

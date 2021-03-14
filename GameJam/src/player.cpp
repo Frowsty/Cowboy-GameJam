@@ -168,12 +168,16 @@ bool Player::run_collision()
             {
                 tile->destroyed = true;
                 holding_key = true;
+                wrong_key = false;
+                pickup_time = GetTickCount();
                 return false;
             }
             else if (name.compare("correct_key") == 0 && !holding_key)
             {
                 has_correct_key = true;
                 holding_key = true;
+                wrong_key = false;
+                pickup_time = GetTickCount();
                 tile->destroyed = true;
                 return false;
             }
@@ -182,13 +186,15 @@ bool Player::run_collision()
                 if (has_correct_key)
                 {
                     tile->destroyed = true;
+                    holding_key = false;
+                    pickup_time = GetTickCount();
                     level++;
-                    has_correct_key = false;
                 }
                 else
                 {
-                    wrong_key = true;
                     holding_key = false;
+                    wrong_key = true;                  
+                    pickup_time = GetTickCount();
                 }
                 return false;
             }

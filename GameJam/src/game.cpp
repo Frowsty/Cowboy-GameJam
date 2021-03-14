@@ -102,8 +102,20 @@ bool Game::OnUserUpdate(float fElapsedTime)
 
     case game_states::GAMEPLAY:
         // run the main game.
+      if ((player.holding_key || player.wrong_key || player.has_correct_key) && GetTickCount() - player.pickup_time <= 1250)
+          menu.add_text({ player.position.x + (player.size.x / 2), player.position.y - 10 }, player.holding_key ? "Picked up a key" : player.wrong_key ? "Wrong key" : player.has_correct_key ? "Key found" : "", true);
+
         map.render();
         player.update();
+
+        if (menu.has_elements())
+        {
+            menu.on_render();
+            menu.reset();
+        }
+
+        while (GetTickCount() - player.pickup_time <= 1250)
+          return true;
 
         // Advance to next level if current one is different from the players level
         if (cur_level != player.level)
