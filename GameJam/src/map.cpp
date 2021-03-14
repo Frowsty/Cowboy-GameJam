@@ -6,6 +6,8 @@ using json = nlohmann::json;
 
 void Map::loadMap(const std::string& path)
 {
+    tiles.clear();
+    collidable_tiles.clear();
     sprite_sheet.Load("./sprites/tilesheet.png");
     std::ifstream i(path);
     json j = json::parse(i);
