@@ -135,7 +135,7 @@ bool Game::OnUserUpdate(float fElapsedTime)
             menu.add_text({ player.position.x + (player.size.x / 2), player.position.y - 10 }, player.holding_key ? "Picked up a key" : player.wrong_key ? "Wrong key" : player.has_correct_key ? "Key found" : "", true);
              
         if (player.holding_key && GetTickCount() - player.interact_time <= 1250 && GetTickCount() - player.pickup_time >= 1250)
-            menu.add_text({ player.position.x + (player.size.x / 2), player.position.y - 10 }, "Inventory full", true);
+            menu.add_text({ player.position.x + (player.size.x / 2) + 10, player.position.y - 10 }, "Inventory full", true);
 
         // run most of the game logic and rendering
         map.render();
