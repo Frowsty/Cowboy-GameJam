@@ -67,12 +67,12 @@ bool Game::OnUserUpdate(float fElapsedTime)
     case game_states::SETTINGS_MENU:
         menu.add_text({ ((ScreenWidth() / 2.f)), ((ScreenHeight() / 2.f) - 100.f) }, "About:", true);
         menu.add_text({ ((ScreenWidth() / 2.f)), ((ScreenHeight() / 2.f) - 87.f) }, "You must collect the correct key for the chest to progress to the next area.", true);
-        menu.add_text({ ((ScreenWidth() / 2.f)), ((ScreenHeight() / 2.f) - 74.f) }, "Make sure you are hastey though as you only have 180 seconds to complete this task.", true);
+        menu.add_text({ ((ScreenWidth() / 2.f)), ((ScreenHeight() / 2.f) - 74.f) }, "Make sure you are hastey though as you only have 150 seconds to complete this task.", true);
         menu.add_text({ ((ScreenWidth() / 2.f)), ((ScreenHeight() / 2.f) - 61.f) }, "Nots: You may only carry one key at a time.", true);
 
         menu.add_text({ ((ScreenWidth() / 2.f)), ((ScreenHeight() / 2.f) - 23.f) }, "Move left: Left arrow key", true);
         menu.add_text({ ((ScreenWidth() / 2.f)), ((ScreenHeight() / 2.f) - 10.f) }, "Move right: Right arrow key", true);
-        menu.add_text({ ((ScreenWidth() / 2.f)), ((ScreenHeight() / 2.f) + 3.f) }, "Jump: Up arrow key/Space", true);
+        menu.add_text({ ((ScreenWidth() / 2.f)), ((ScreenHeight() / 2.f) + 3.f) }, "Jump: Up arrow key", true);
         menu.add_text({ ((ScreenWidth() / 2.f)), ((ScreenHeight() / 2.f) + 16.f) }, "Double jump: Double press the jump key.", true);
         menu.add_button({ ((ScreenWidth() / 2.f) - 50.f), ((ScreenHeight() / 2.f) + 29.f) }, { 100, 20 }, "Back", true, [&]()
         {

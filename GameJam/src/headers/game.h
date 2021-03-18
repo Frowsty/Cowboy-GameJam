@@ -36,7 +36,7 @@ public:
 
 private:
     olcPGEX_SplashScreen splash_screen;
-    game_states game_state = game_states::SPLASHSCREEN;
+    game_states game_state;
     Player player;
     Map map;
     Menu menu;

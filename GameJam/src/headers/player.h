@@ -7,11 +7,14 @@
 class Player
 {
 public:
+    enum class jump_state
+    {
+        NONE = 0,
+        JUMPING
+    };
+
     olc::PixelGameEngine* m_pge;
 
-    bool dead = false;
-    bool did_jump = false;
-    bool double_jump = false;
     bool on_ground = false;
     bool has_correct_key = false;
     bool holding_key = false;
@@ -19,16 +22,19 @@ public:
     bool did_interact = false;
     int interact_time = 0;
     int pickup_time = 0;
-    int jump_height = 64;
+    int jump_height = 70;
     int level = 1;
     olc::vf2d jump_pos;
 
-    int last_direction = 1;
-    float last_movement_tick;
+    float double_jump_timer;
+
+    std::string last_animation_state;
+
+    jump_state state;
 
     olc::vf2d start_position;
     olc::vf2d position;
-    olc::vf2d new_position;
+    olc::vf2d old_position;
     olc::vi2d size;
     olc::AnimatedSprite player_sprite;
     olc::Renderable* spritesheet;
@@ -41,14 +47,19 @@ public:
     // set idle sprite
     void set_idle_sprite(int direction);
 
-    // player movement
+    // player input
     void movement();
+
+    // player movement
+    void jump_movement();
 
     // player interraction
     void interaction();
 
-    // Run collision against collidable tiles
+    // check collision
     bool check_collision(const Map::tile& left);
+
+    // run collision system
     bool run_collision();
 
     // player rendering

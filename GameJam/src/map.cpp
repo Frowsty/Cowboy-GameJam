@@ -64,7 +64,7 @@ void Map::loadMap(const std::string& path)
                 // Here we store all tile values into a vector of tiles
                 // The data we store is basically the position on the map where it's drawn
                 // and also the position on the tileSheet where it's stored
-                tiles.push_back(new Map::tile{ { x - TILE_SIZE, y }, { tile_sheet_pos_x, tile_sheet_pos_y }, {TILE_SIZE, TILE_SIZE}, false });
+                tiles.push_back(new Map::tile{ { x - TILE_SIZE, y }, { tile_sheet_pos_x, tile_sheet_pos_y }, { TILE_SIZE, TILE_SIZE }, false });
 
                 // If the layer_name is related to anything collidable we shall add it to collidable tiles
                 if (layer_name == "colliders")

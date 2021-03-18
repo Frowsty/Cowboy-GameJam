@@ -17,21 +17,18 @@ void Player::create()
     size = { 25, 30 };
 
     // Add different animation states
-    player_sprite.AddState("idle-down", { olc::vi2d(32, 0) });
-    player_sprite.AddState("walking-down", { olc::vi2d(0, 0), olc::vi2d(64, 0) });
     player_sprite.AddState("idle-left", { olc::vi2d(32, 32) });
     player_sprite.AddState("walking-left", { olc::vi2d(0, 32), olc::vi2d(64, 32) });
     player_sprite.AddState("idle-right", { olc::vi2d(32, 64) });
     player_sprite.AddState("walking-right", { olc::vi2d(0, 64), olc::vi2d(64, 64) });
-    player_sprite.AddState("idle-up", { olc::vi2d(32, 96) });
-    player_sprite.AddState("walking-up", { olc::vi2d(0, 96), olc::vi2d(64, 96) });
 
-    player_sprite.SetState("idle-down");
+    player_sprite.SetState("idle-left");
+    last_animation_state = player_sprite.GetState();
 
     // initialize a starting position
     start_position = { 64, 600 };
     position = start_position;
-    new_position = start_position;
+    old_position = start_position;
 
     holding_key = false;
     wrong_key = false;
@@ -51,101 +48,104 @@ void Player::set_idle_sprite(int direction)
     }
 }
 
+void Player::jump_movement()
+{
+    switch (state)
+    {
+    case jump_state::JUMPING:
+        old_position.y = position.y;
+        position.y -= (SPEED * 2) * m_pge->GetElapsedTime();
+
+        jump_height = 70;
+
+        if (std::abs(position.y - jump_pos.y) > jump_height || run_collision())
+        {
+            position.y = old_position.y;
+            double_jump_timer = GetTickCount();
+            state = jump_state::NONE;
+        }
+        break;
+    }
+
+    if (state == jump_state::NONE)
+    {
+        if (m_pge->GetKey(olc::UP).bPressed && (GetTickCount() - double_jump_timer) < 250)
+        {
+            jump_pos = position;
+            state = jump_state::JUMPING;
+        }
+    }
+
+    // run constant gravity
+    if (state != jump_state::JUMPING)
+    {
+        old_position.y = position.y;
+        position.y += GRAVITY * m_pge->GetElapsedTime();
+
+        if (run_collision())
+        {
+            on_ground = true;
+            position.y = old_position.y;
+        }
+        else
+            on_ground = false;
+    }
+}
+
 void Player::movement()
 {
     if ((m_pge->GetKey(olc::LEFT).bPressed || m_pge->GetKey(olc::LEFT).bHeld))
     {
         player_sprite.SetState("walking-left");
-        new_position.x -= SPEED * m_pge->GetElapsedTime();
+        last_animation_state = player_sprite.GetState();
 
-        if (!run_collision())
-            position.x = new_position.x;
-        else
-            new_position.x = position.x;
+        old_position.x = position.x;
+        position.x -= SPEED * m_pge->GetElapsedTime();
 
-        last_direction = 1;
-        last_movement_tick = GetTickCount();
+        if (run_collision())
+            position.x = old_position.x;
     }
-
     if ((m_pge->GetKey(olc::RIGHT).bPressed || m_pge->GetKey(olc::RIGHT).bHeld))
     {
         player_sprite.SetState("walking-right");
-        new_position.x += SPEED * m_pge->GetElapsedTime();
+        last_animation_state = player_sprite.GetState();
 
-        if (!run_collision())
-            position.x = new_position.x;
-        else
-            new_position.x = position.x;
+        old_position.x = position.x;
+        position.x += SPEED * m_pge->GetElapsedTime();
 
-        last_direction = 2;
-        last_movement_tick = GetTickCount();
+        if (run_collision())
+            position.x = old_position.x;
     }
-
-    // Run jump movement smoothly until we reach the top before we start the gravity fall again
-    if (did_jump)
+    if (m_pge->GetKey(olc::UP).bPressed)
     {
-        if (m_pge->GetKey(olc::UP).bPressed && !double_jump)
-        {
-            double_jump = true;
-            jump_height = 128;
-        }
-
-        new_position.y -= (SPEED * 2) * m_pge->GetElapsedTime();
-
-        if (!run_collision())
+        if (state == jump_state::NONE && on_ground)
         {
             on_ground = false;
-            position.y = new_position.y;
-        }
-        else
-            did_jump = false;
-
-        if (std::abs(position.y - (jump_pos.y)) >= jump_height)
-        {
-            jump_height = 64;
-            did_jump = false;
-            double_jump = false;
-        }
-    }
-
-    if ((m_pge->GetKey(olc::UP).bPressed || did_jump) && on_ground)
-    {
-        if (!did_jump)
             jump_pos = position;
-
-        did_jump = true;
-        last_movement_tick = GetTickCount();
+            state = jump_state::JUMPING;
+        }
     }
+    if (state != jump_state::JUMPING)
+        state = jump_state::NONE;
 
-    // Constant gravity pull
-    if (!did_jump)
+    if (!(m_pge->GetKey(olc::RIGHT).bPressed || m_pge->GetKey(olc::RIGHT).bHeld) &&
+        !(m_pge->GetKey(olc::LEFT).bPressed || m_pge->GetKey(olc::LEFT).bHeld))
     {
-        new_position.y += GRAVITY * m_pge->GetElapsedTime();
-        if (!run_collision())
-        {
-            on_ground = false;
-            position.y = new_position.y;
-        }
-        else
-        {
-            on_ground = true;
-            double_jump = false;
-            jump_height = 64;
-            new_position.y = position.y;
-        }
-    }
+        if (last_animation_state == "walking-left")
+            last_animation_state = "idle-left";
+        else if (last_animation_state == "walking-right")
+            last_animation_state = "idle-right";
 
-    // Set idle animation after no movement has been made for x time
-    if (GetTickCount() - last_movement_tick > 10)
-        set_idle_sprite(last_direction);
+        player_sprite.SetState(last_animation_state);
+    }
 }
 
-bool Player::check_collision(const Map::tile& left)
+bool Player::check_collision(const Map::tile& tile)
 {
-    return left.position.x + left.tile_size.x >= new_position.x + 3.5
-        && left.position.x < new_position.x + size.x + 3.5
-        && left.position.y + left.tile_size.y >= new_position.y
-        && left.position.y < new_position.y + size.y + 1;
+    return tile.position.x + tile.tile_size.x >= position.x + 3.5
+        && tile.position.x < position.x + size.x + 3.5
+        && tile.position.y + tile.tile_size.y >= position.y
+        && tile.position.y < position.y + size.y + 1;
 }
 
 void Player::interaction()
@@ -168,7 +168,7 @@ bool Player::run_collision()
             continue;
 
 
-        //m_pge->DrawRect(tile->position, { 32, 32 }, olc::RED);
+        //m_pge->DrawRect(tile->position, tile->tile_size, olc::RED);
 
 
         if (check_collision(*tile))
@@ -202,7 +202,7 @@ bool Player::run_collision()
                 else
                 {
                     holding_key = false;
-                    wrong_key = true;     
+                    wrong_key = true;
                     pickup_time = GetTickCount();
                 }
                 return false;
@@ -214,7 +214,7 @@ bool Player::run_collision()
                 return true;
             }
             else if (name.compare("map_terrain") == 0)
-                return true;            
+                return true;
         }
     }
 
@@ -229,6 +229,7 @@ void Player::render()
 void Player::update()
 {
     movement();
+    jump_movement();
     interaction();
     render();
 }
