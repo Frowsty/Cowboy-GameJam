@@ -140,8 +140,6 @@ bool Game::OnUserUpdate(float fElapsedTime)
                 menu.add_text({ player.position.x + (player.size.x / 2), player.position.y - 10 }, "Wrong key", true);
             else if (player.key_type == Player::key_type::CORRECT && !menu.has_elements())
                 menu.add_text({ player.position.x + (player.size.x / 2), player.position.y - 10 }, "Found key", true);
-            else
-                std::cout << menu.has_elements() << "\n";
         }
         else
             player.first_pickup = false;
