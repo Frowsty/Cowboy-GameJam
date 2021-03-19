@@ -54,7 +54,7 @@ bool Game::OnUserUpdate(float fElapsedTime)
             }
         });
 
-        menu.add_text({ 5, 627 }, "Made by Kian and Frosty 2021", false);
+        menu.add_text({ 5, 627 }, "Made by Kian and Daniel 2021", false);
 
         // update input and render.
         menu.on_input();
@@ -73,8 +73,9 @@ bool Game::OnUserUpdate(float fElapsedTime)
         menu.add_text({ ((ScreenWidth() / 2.f)), ((ScreenHeight() / 2.f) - 23.f) }, "Move left: Left arrow key", true);
         menu.add_text({ ((ScreenWidth() / 2.f)), ((ScreenHeight() / 2.f) - 10.f) }, "Move right: Right arrow key", true);
         menu.add_text({ ((ScreenWidth() / 2.f)), ((ScreenHeight() / 2.f) + 3.f) }, "Jump: Up arrow key", true);
-        menu.add_text({ ((ScreenWidth() / 2.f)), ((ScreenHeight() / 2.f) + 16.f) }, "Double jump: Double press the jump key.", true);
-        menu.add_button({ ((ScreenWidth() / 2.f) - 50.f), ((ScreenHeight() / 2.f) + 29.f) }, { 100, 20 }, "Back", true, [&]()
+        menu.add_text({ ((ScreenWidth() / 2.f)), ((ScreenHeight() / 2.f) + 16.f) }, "Double jump: Jump again within a time period of your first jump", true);
+        menu.add_text({ ((ScreenWidth() / 2.f)), ((ScreenHeight() / 2.f) + 29.f) }, "Pick up key: Down arrow key", true);
+        menu.add_button({ ((ScreenWidth() / 2.f) - 50.f), ((ScreenHeight() / 2.f) + 42.f) }, { 100, 20 }, "Back", true, [&]()
         {
             game_state = game_states::MAIN_MENU;
         });
