@@ -45,9 +45,6 @@ public:
     // create player
     void create();
 
-    // set idle sprite
-    void set_idle_sprite(int direction);
-
     // player input
     void movement();
 

@@ -35,19 +35,6 @@ void Player::create()
     has_correct_key = false;
 }
 
-void Player::set_idle_sprite(int direction)
-{
-    switch (direction)
-    {
-    case 1:
-        player_sprite.SetState("idle-left");
-        break;
-    case 2:
-        player_sprite.SetState("idle-right");
-        break;
-    }
-}
-
 void Player::jump_movement()
 {
     switch (state)
@@ -144,10 +131,10 @@ void Player::movement()
 
 bool Player::check_collision(const Map::tile& tile)
 {
-    return tile.position.x + tile.tile_size.x >= position.x + 3.5
-        && tile.position.x < position.x + size.x + 3.5
-        && tile.position.y + tile.tile_size.y >= position.y
-        && tile.position.y < position.y + size.y + 1;
+    return tile.position.x + static_cast<float>(tile.tile_size.x) >= position.x + 3.5
+        && tile.position.x < position.x + static_cast<float>(size.x) + 3.5
+        && tile.position.y + static_cast<float>(tile.tile_size.y) >= position.y
+        && tile.position.y < position.y + static_cast<float>(size.y) + 1;
 }
 
 void Player::interaction()
