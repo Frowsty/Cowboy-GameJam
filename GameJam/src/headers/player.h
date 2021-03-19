@@ -13,13 +13,22 @@ public:
         JUMPING
     };
 
+    enum class key_state
+    {
+        NONE = 0,
+        HOLDING
+    };
+
+    enum class key_type
+    {
+        WRONG = 0,
+        CORRECT 
+    };
+
     olc::PixelGameEngine* m_pge;
 
     bool on_ground = false;
-    bool has_correct_key = false;
-    bool holding_key = false;
-    bool wrong_key = false;
-    bool did_interact = false;
+    bool first_pickup = false;
     int interact_time = 0;
     int pickup_time = 0;
     int jump_height = 70;
@@ -32,6 +41,8 @@ public:
     std::string last_animation_state;
 
     jump_state state;
+    key_state key_state;
+    key_type key_type;
 
     olc::vf2d start_position;
     olc::vf2d position;
@@ -58,7 +69,7 @@ public:
     bool check_collision(const Map::tile& left);
 
     // run collision system
-    bool run_collision();
+    bool run_collision(bool interaction);
 
     // player rendering
     void render();

@@ -30,9 +30,7 @@ void Player::create()
     position = start_position;
     old_position = start_position;
 
-    holding_key = false;
-    wrong_key = false;
-    has_correct_key = false;
+    key_state = key_state::NONE;
 }
 
 void Player::jump_movement()
@@ -45,7 +43,7 @@ void Player::jump_movement()
 
         jump_height = 70;
 
-        if (std::abs(position.y - jump_pos.y) > jump_height || run_collision())
+        if (std::abs(position.y - jump_pos.y) > jump_height || run_collision(false))
         {
             position.y = old_position.y;
             double_jump_timer = GetTickCount();
@@ -70,7 +68,7 @@ void Player::jump_movement()
         old_position.y = position.y;
         position.y += GRAVITY * m_pge->GetElapsedTime();
 
-        if (run_collision())
+        if (run_collision(false))
         {
             on_ground = true;
             double_jump = false;
@@ -91,7 +89,7 @@ void Player::movement()
         old_position.x = position.x;
         position.x -= SPEED * m_pge->GetElapsedTime();
 
-        if (run_collision())
+        if (run_collision(false))
             position.x = old_position.x;
     }
     if ((m_pge->GetKey(olc::RIGHT).bPressed || m_pge->GetKey(olc::RIGHT).bHeld))
@@ -102,7 +100,7 @@ void Player::movement()
         old_position.x = position.x;
         position.x += SPEED * m_pge->GetElapsedTime();
 
-        if (run_collision())
+        if (run_collision(false))
             position.x = old_position.x;
     }
     if (m_pge->GetKey(olc::UP).bPressed)
@@ -131,25 +129,19 @@ void Player::movement()
 
 bool Player::check_collision(const Map::tile& tile)
 {
-    return tile.position.x + static_cast<float>(tile.tile_size.x) >= position.x + 3.5
-        && tile.position.x < position.x + static_cast<float>(size.x) + 3.5
-        && tile.position.y + static_cast<float>(tile.tile_size.y) >= position.y
-        && tile.position.y < position.y + static_cast<float>(size.y) + 1;
+    return tile.position.x + tile.tile_size.x >= position.x + 3.5
+        && tile.position.x < position.x + size.x + 3.5
+        && tile.position.y + tile.tile_size.y >= position.y
+        && tile.position.y < position.y + size.y + 1;
 }
 
 void Player::interaction()
 {
-    did_interact = false;
-
     if (m_pge->GetKey(olc::DOWN).bReleased || m_pge->GetKey(olc::DOWN).bPressed)
-    {
-        did_interact = true;
-        interact_time = GetTickCount();
-        run_collision();
-    }    
+        run_collision(true);  
 }
 
-bool Player::run_collision()
+bool Player::run_collision(bool interaction)
 {
     for (auto& [name, tile] : *collidable_tiles)
     {
@@ -162,38 +154,35 @@ bool Player::run_collision()
 
         if (check_collision(*tile))
         {
-            if (name.compare("collectable") == 0 && !holding_key && did_interact)
+            if ((name.compare("collectable") == 0 || name.compare("correct_key") == 0 || name.compare("next_level") == 0) && interaction)
+                pickup_time = GetTickCount();
+            if (name.compare("collectable") == 0 && key_state != key_state::HOLDING && interaction)
             {
                 tile->destroyed = true;
-                holding_key = true;
-                wrong_key = false;
-                pickup_time = GetTickCount();
+                first_pickup = true;
+                key_state = key_state::HOLDING;
+                key_type = key_type::WRONG;
                 return false;
             }
-            else if (name.compare("correct_key") == 0 && !holding_key && did_interact)
+            else if (name.compare("correct_key") == 0 && key_state != key_state::HOLDING && interaction)
             {
                 tile->destroyed = true;
-                has_correct_key = true;
-                holding_key = true;
-                wrong_key = false;
-                pickup_time = GetTickCount();
+                first_pickup = true;
+                key_state = key_state::HOLDING;
+                key_type = key_type::CORRECT;
                 return false;
             }
-            else if (name.compare("next_level") == 0 && holding_key && did_interact)
+            else if (name.compare("next_level") == 0 && key_state == key_state::HOLDING && interaction)
             {
-                if (has_correct_key)
+                if (key_type == key_type::CORRECT)
                 {
                     tile->destroyed = true;
-                    holding_key = false;
-                    pickup_time = GetTickCount();
+                    key_state = key_state::NONE;
                     level++;
                 }
                 else
-                {
-                    holding_key = false;
-                    wrong_key = true;
-                    pickup_time = GetTickCount();
-                }
+                    key_state = key_state::NONE;
+
                 return false;
             }
             else if (name.compare("obstacle") == 0)

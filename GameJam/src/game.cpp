@@ -124,18 +124,30 @@ bool Game::OnUserUpdate(float fElapsedTime)
             start_time = GetTickCount(); // reset start_time to recount 1 second
         }
 
-        menu.add_text({ 10, 5 }, "TIME LEFT: " + std::to_string(timer), false);
-
         if (timer == 0)
             game_state = game_states::FAIL_GAME;
         // end of timer
 
         // run the main game.
-        if (GetTickCount() - player.pickup_time <= 1250) 
-            menu.add_text({ player.position.x + (player.size.x / 2), player.position.y - 10 }, player.holding_key ? "Picked up a key" : player.wrong_key ? "Wrong key" : player.has_correct_key ? "Key found" : "", true);
-             
-        if (player.holding_key && GetTickCount() - player.interact_time <= 1250 && GetTickCount() - player.pickup_time >= 1250)
+        if (player.key_state == Player::key_state::HOLDING && !player.first_pickup && (GetTickCount() - player.pickup_time <= 1250))
             menu.add_text({ player.position.x + (player.size.x / 2) + 10, player.position.y - 10 }, "Inventory full", true);
+
+        if (GetTickCount() - player.pickup_time <= 1250)
+        {
+            if (player.key_state == Player::key_state::HOLDING && player.first_pickup)
+                menu.add_text({ player.position.x + (player.size.x / 2), player.position.y - 10 }, "Picked up a key", true);
+            else if (player.key_type == Player::key_type::WRONG && !menu.has_elements())
+                menu.add_text({ player.position.x + (player.size.x / 2), player.position.y - 10 }, "Wrong key", true);
+            else if (player.key_type == Player::key_type::CORRECT && !menu.has_elements())
+                menu.add_text({ player.position.x + (player.size.x / 2), player.position.y - 10 }, "Found key", true);
+            else
+                std::cout << menu.has_elements() << "\n";
+        }
+        else
+            player.first_pickup = false;
+
+        // Draw timer on screen
+        menu.add_text({ 10, 5 }, "TIME LEFT: " + std::to_string(timer), false);
 
         // run most of the game logic and rendering
         map.render();
