@@ -67,10 +67,11 @@ void Player::jump_movement()
         break;
     }
 
-    if (state == jump_state::NONE)
+    if (state == jump_state::NONE && !double_jump)
     {
         if (m_pge->GetKey(olc::UP).bPressed && (GetTickCount() - double_jump_timer) < 250)
         {
+            double_jump = true;
             jump_pos = position;
             state = jump_state::JUMPING;
         }
@@ -85,6 +86,7 @@ void Player::jump_movement()
         if (run_collision())
         {
             on_ground = true;
+            double_jump = false;
             position.y = old_position.y;
         }
         else

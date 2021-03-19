@@ -27,6 +27,7 @@ public:
     olc::vf2d jump_pos;
 
     float double_jump_timer;
+    bool double_jump = false;
 
     std::string last_animation_state;
 
