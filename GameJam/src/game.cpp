@@ -21,6 +21,8 @@ bool Game::OnUserCreate()
 bool Game::OnUserUpdate(float fElapsedTime)
 {
     Clear(olc::BLACK);
+    std::string github_text = "https://github.com/Frowsty/Cowboy-GameJam";
+    olc::vf2d github_size = GetTextSize(github_text);
     switch (game_state)
     {
     case game_states::SPLASHSCREEN:
@@ -55,6 +57,7 @@ bool Game::OnUserUpdate(float fElapsedTime)
         });
 
         menu.add_text({ 5, 627 }, "Made by Kian and Daniel 2021", false);
+        menu.add_text({ 1020 - github_size.x, 627 }, github_text, false);
 
         // update input and render.
         menu.on_input();
@@ -81,6 +84,7 @@ bool Game::OnUserUpdate(float fElapsedTime)
         });
 
         menu.add_text({ 5, 627 }, "Made by Kian and Daniel 2021", false);
+        menu.add_text({ 1020 - github_size.x, 627 }, github_text, false);
 
         menu.on_input();
         menu.on_render();
