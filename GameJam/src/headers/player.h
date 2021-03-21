@@ -27,6 +27,8 @@ public:
 
     olc::PixelGameEngine* m_pge;
 
+    bool debug_mode = false;
+
     bool on_ground = false;
     bool first_pickup = false;
     int interact_time = 0;

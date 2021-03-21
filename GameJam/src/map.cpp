@@ -14,6 +14,7 @@ void Map::loadMap(const std::string& path)
     map_size.y = j.at("tileshigh");
     map_size.x = j.at("tileswide");
     olc::vi2d tile_size = { j.at("tilewidth"), j.at("tileheight") };
+    olc::Sprite temp_sprite = olc::Sprite("./sprites/tilesheet.png");
 
     int tile_sheet_width = sprite_sheet.Sprite()->width / tile_size.x;
     auto layers = j.at("layers");
@@ -61,10 +62,28 @@ void Map::loadMap(const std::string& path)
                 tile_sheet_pos_y *= tile_size.y;
                 tile_sheet_pos_x *= tile_size.x;
 
-                // Here we store all tile values into a vector of tiles
+                // Here we store all tile values into a vector of tiles and determine the height of each collidable block
                 // The data we store is basically the position on the map where it's drawn
                 // and also the position on the tileSheet where it's stored
-                tiles.push_back(new Map::tile{ { x - TILE_SIZE, y }, { tile_sheet_pos_x, tile_sheet_pos_y }, { TILE_SIZE, TILE_SIZE }, false });
+                if (layer_name != "collectables" && layer_name != "next_level")
+                {
+                    int tile_height = 0;
+                    for (int i = tile_sheet_pos_y + 1; i < tile_sheet_pos_y + tile_size.y; i++) {
+                        olc::Pixel pixel = temp_sprite.GetPixel(tile_sheet_pos_x - (tile_sheet_pos_x / tile_size.y) + (tile_size.x / 2), i);
+                        if (std::abs(tile_sheet_pos_y - i) >= TILE_SIZE - 1)
+                        {
+                            tile_height = TILE_SIZE;
+                            break;
+                        }
+                        if (pixel.a < 255) {
+                            tile_height = std::abs(tile_sheet_pos_y - i);
+                            break;
+                        }
+                    }
+                    tiles.push_back(new Map::tile{ { x - TILE_SIZE, y }, { tile_sheet_pos_x, tile_sheet_pos_y }, { TILE_SIZE, tile_height }, false });
+                }
+                else
+                    tiles.push_back(new Map::tile{ { x - TILE_SIZE, y }, { tile_sheet_pos_x, tile_sheet_pos_y }, { TILE_SIZE, TILE_SIZE }, false });
 
                 // If the layer_name is related to anything collidable we shall add it to collidable tiles
                 if (layer_name == "colliders")

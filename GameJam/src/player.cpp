@@ -14,7 +14,7 @@ void Player::create()
     spritesheet->Load("./sprites/character.png");
     player_sprite.spriteSheet = spritesheet;
     player_sprite.SetSpriteSize({ 32, 32 });
-    size = { 25, 30 };
+    size = { 25, 32 };
 
     // Add different animation states
     player_sprite.AddState("idle-left", { olc::vi2d(32, 32) });
@@ -132,11 +132,15 @@ bool Player::check_collision(const Map::tile& tile)
     return tile.position.x + tile.tile_size.x >= position.x + 3.5
         && tile.position.x < position.x + size.x + 3.5
         && tile.position.y + tile.tile_size.y >= position.y
-        && tile.position.y < position.y + size.y + 1;
+        && tile.position.y < position.y + size.y;
 }
 
 void Player::interaction()
 {
+    // debug mode
+    if (m_pge->GetKey(olc::F10).bReleased)
+        debug_mode = !debug_mode;
+
     if (m_pge->GetKey(olc::DOWN).bReleased || m_pge->GetKey(olc::DOWN).bPressed)
         run_collision(true);  
 }
@@ -147,10 +151,6 @@ bool Player::run_collision(bool interaction)
     {
         if (tile->destroyed)
             continue;
-
-
-        //m_pge->DrawRect(tile->position, tile->tile_size, olc::RED);
-
 
         if (check_collision(*tile))
         {
@@ -202,6 +202,18 @@ bool Player::run_collision(bool interaction)
 void Player::render()
 {
     player_sprite.Draw(m_pge->GetElapsedTime(), position);
+
+    // Render collidables
+    if (debug_mode)
+    {
+        for (auto& [name, tile] : *collidable_tiles)
+        {
+            if (tile->destroyed)
+                continue;
+
+            m_pge->DrawRect(tile->position, tile->tile_size, olc::RED);
+        }
+    }
 }
 
 void Player::update()
