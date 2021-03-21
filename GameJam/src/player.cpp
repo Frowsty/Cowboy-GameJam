@@ -78,7 +78,7 @@ void Player::jump_movement()
         else
         {
             on_ground = false;
-            gravity_multiplier += 0.002f;
+            gravity_multiplier += 0.0025f;
         }
     }
 }

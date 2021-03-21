@@ -57,7 +57,10 @@ bool Game::OnUserUpdate(float fElapsedTime)
         });
 
         menu.add_text({ 5, 627 }, "Made by Kian and Daniel 2021", false);
-        menu.add_text({ 1020 - github_size.x, 627 }, github_text, false);
+        menu.add_button({ 1000 - github_size.x, 627 }, { github_size.x + 10, github_size.y }, github_text, false, [&]()
+        {
+            ShellExecute(0, 0, github_text.c_str(), 0, 0, SW_SHOW);
+        });
 
         // update input and render.
         menu.on_input();
@@ -84,7 +87,10 @@ bool Game::OnUserUpdate(float fElapsedTime)
         });
 
         menu.add_text({ 5, 627 }, "Made by Kian and Daniel 2021", false);
-        menu.add_text({ 1020 - github_size.x, 627 }, github_text, false);
+        menu.add_button({ 1000 - github_size.x, 627 }, { github_size.x + 10, github_size.y }, github_text, false, [&]()
+        {
+            ShellExecute(0, 0, github_text.c_str(), 0, 0, SW_SHOW);
+        });
 
         menu.on_input();
         menu.on_render();

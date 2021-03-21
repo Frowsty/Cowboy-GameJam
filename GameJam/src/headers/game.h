@@ -4,6 +4,8 @@
 #include "player.h"
 #include "map.h"
 #include "menu.h"
+#include <windows.h>
+#include <shellapi.h>
 
 #define TIMER 150
 
