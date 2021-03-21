@@ -73,7 +73,7 @@ bool Game::OnUserUpdate(float fElapsedTime)
         menu.add_text({ ((ScreenWidth() / 2.f)), ((ScreenHeight() / 2.f) - 23.f) }, "Move left: Left arrow key", true);
         menu.add_text({ ((ScreenWidth() / 2.f)), ((ScreenHeight() / 2.f) - 10.f) }, "Move right: Right arrow key", true);
         menu.add_text({ ((ScreenWidth() / 2.f)), ((ScreenHeight() / 2.f) + 3.f) }, "Jump: Up arrow key", true);
-        menu.add_text({ ((ScreenWidth() / 2.f)), ((ScreenHeight() / 2.f) + 16.f) }, "Double jump: Jump again within a time period of your first jump", true);
+        menu.add_text({ ((ScreenWidth() / 2.f)), ((ScreenHeight() / 2.f) + 16.f) }, "Double jump: Jump at the peak of your first jump", true);
         menu.add_text({ ((ScreenWidth() / 2.f)), ((ScreenHeight() / 2.f) + 29.f) }, "Pick up key: Down arrow key", true);
         menu.add_button({ ((ScreenWidth() / 2.f) - 50.f), ((ScreenHeight() / 2.f) + 42.f) }, { 100, 20 }, "Back", true, [&]()
         {

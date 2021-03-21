@@ -31,6 +31,7 @@ public:
 
     bool on_ground = false;
     bool first_pickup = false;
+    float gravity_multiplier = 1.0f;
     int interact_time = 0;
     int pickup_time = 0;
     int jump_height = 70;
