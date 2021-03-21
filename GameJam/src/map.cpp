@@ -75,7 +75,7 @@ void Map::loadMap(const std::string& path)
                             tile_height = TILE_SIZE;
                             break;
                         }
-                        if (pixel.a < 255) {
+                        if (pixel.a == 0) {
                             tile_height = std::abs(tile_sheet_pos_y - i);
                             break;
                         }

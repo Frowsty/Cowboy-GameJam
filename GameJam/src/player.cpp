@@ -14,7 +14,7 @@ void Player::create()
     spritesheet->Load("./sprites/character.png");
     player_sprite.spriteSheet = spritesheet;
     player_sprite.SetSpriteSize({ 32, 32 });
-    size = { 25, 32 };
+    size = { 25, 31 };
 
     // Add different animation states
     player_sprite.AddState("idle-left", { olc::vi2d(32, 32) });
