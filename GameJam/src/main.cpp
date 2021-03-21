@@ -5,7 +5,7 @@
 int main()
 {
 #ifndef _DEBUG
-		//FreeConsole();
+		FreeConsole();
 #endif
 
 		Game game;
