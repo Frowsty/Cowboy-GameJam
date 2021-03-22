@@ -56,6 +56,7 @@ bool Game::OnUserUpdate(float fElapsedTime)
                 game_state = game_states::EXIT_GAME;
             else 
             {
+                player.level = 1;
                 game_state = game_states::END_GAME;
                 in_game = false;
             }
@@ -202,16 +203,21 @@ bool Game::OnUserUpdate(float fElapsedTime)
         menu.add_text({ ((ScreenWidth() / 2.f)), ((ScreenHeight() / 2.f) - 23.f) }, "Game over.", true);
         menu.add_button({ ((ScreenWidth() / 2.f) - 50.f), ((ScreenHeight() / 2.f) - 10.f) }, { 100, 20 }, "Retry", true, [&]()
         {
+            player.level = 1;
             game_state = game_states::START_GAME;
         });
 
         menu.add_button({ ((ScreenWidth() / 2.f) - 50.f), ((ScreenHeight() / 2.f) + 13.f) }, { 100, 20 }, "Main menu", true, [&]()
         {
+            player.level = 1;
             in_game = false;
             game_state = game_states::MAIN_MENU;
         });
 
         menu.add_text({ 5, 627 }, "Made by Kian and Daniel 2021", false);
+
+        // render particles
+        particles.update();
 
         menu.on_input();
         menu.on_render();
@@ -223,11 +229,15 @@ bool Game::OnUserUpdate(float fElapsedTime)
         menu.add_text({ ((ScreenWidth() / 2.f)), ((ScreenHeight() / 2.f) - 23.f) }, "WINNER WINNER CHICKEN DINNER", true);
         menu.add_button({ ((ScreenWidth() / 2.f) - 50.f), ((ScreenHeight() / 2.f) - 10.f) }, { 100, 20 }, "Continue", true, [&]()
         {
+            player.level = 1;
             in_game = false;
             game_state = game_states::MAIN_MENU;
         });
 
         menu.add_text({ 5, 627 }, "Made by Kian and Daniel 2021", false);
+
+        // render particles
+        particles.update();
 
         menu.on_input();
         menu.on_render();
