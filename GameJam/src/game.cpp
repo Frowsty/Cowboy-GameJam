@@ -62,10 +62,12 @@ bool Game::OnUserUpdate(float fElapsedTime)
         });
 
         menu.add_text({ 5, 627 }, "Made by Kian and Daniel 2021", false);
+#ifndef EMSCRIPTEN_COMPATIBLE
         menu.add_button({ 1000 - github_size.x, 627 }, { github_size.x + 10, github_size.y }, github_text, false, [&]()
         {
             ShellExecute(0, 0, github_text.c_str(), 0, 0, SW_SHOW);
         });
+#endif
 
         // render particles
         particles.update();
@@ -95,10 +97,12 @@ bool Game::OnUserUpdate(float fElapsedTime)
         });
 
         menu.add_text({ 5, 627 }, "Made by Kian and Daniel 2021", false);
+#ifndef EMSCRIPTEN_COMPATIBLE
         menu.add_button({ 1000 - github_size.x, 627 }, { github_size.x + 10, github_size.y }, github_text, false, [&]()
-        {
-            ShellExecute(0, 0, github_text.c_str(), 0, 0, SW_SHOW);
-        });
+            {
+                ShellExecute(0, 0, github_text.c_str(), 0, 0, SW_SHOW);
+            });
+#endif
 
         // render particles
         particles.update();
@@ -138,12 +142,12 @@ bool Game::OnUserUpdate(float fElapsedTime)
     case game_states::GAMEPLAY:
         // timer related stuff
         if (start_time == 0)
-            start_time = GetTickCount();
+            start_time = time;
 
-        if ((GetTickCount() - start_time) >= 1000)
+        if ((time - start_time) >= 1000)
         {
             timer -= 1;
-            start_time = GetTickCount(); // reset start_time to recount 1 second
+            start_time = time; // reset start_time to recount 1 second
         }
 
         if (timer == 0)
@@ -151,10 +155,10 @@ bool Game::OnUserUpdate(float fElapsedTime)
         // end of timer
 
         // run the main game.
-        if (player.key_state == Player::key_state::HOLDING && !player.first_pickup && (GetTickCount() - player.pickup_time <= 1250))
+        if (player.key_state == Player::key_state::HOLDING && !player.first_pickup && (time - player.pickup_time <= 1250))
             menu.add_text({ player.position.x + (player.size.x / 2) + 10, player.position.y - 10 }, "Inventory full", true);
 
-        if (GetTickCount() - player.pickup_time <= 1250)
+        if (time - player.pickup_time <= 1250)
         {
             if (player.key_state == Player::key_state::HOLDING && player.first_pickup)
                 menu.add_text({ player.position.x + (player.size.x / 2), player.position.y - 10 }, "Picked up a key", true);
@@ -185,7 +189,7 @@ bool Game::OnUserUpdate(float fElapsedTime)
             game_state = game_states::MAIN_MENU;
 
         // Add slight delay before switching level
-        while (GetTickCount() - player.pickup_time <= 1250)
+        while (time - player.pickup_time <= 1250)
             return true;
 
         // Advance to next level if current one is different from the players level

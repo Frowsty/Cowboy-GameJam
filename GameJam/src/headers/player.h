@@ -32,13 +32,13 @@ public:
     bool on_ground = false;
     bool first_pickup = false;
     float gravity_multiplier = 1.0f;
-    int interact_time = 0;
-    int pickup_time = 0;
+    long long interact_time = 0;
+    long long pickup_time = 0;
     int jump_height = 70;
     int level = 1;
     olc::vf2d jump_pos;
 
-    float double_jump_timer;
+    long long double_jump_timer;
     bool double_jump = false;
 
     std::string last_animation_state;

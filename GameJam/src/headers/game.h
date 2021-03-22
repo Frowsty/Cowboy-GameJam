@@ -5,8 +5,6 @@
 #include "map.h"
 #include "menu.h"
 #include "particle.h"
-#include <windows.h>
-#include <shellapi.h>
 
 #define TIMER 150
 
@@ -46,6 +44,6 @@ private:
     Particles particles;
     bool in_game;
     int cur_level;
-    float start_time;
+    long long start_time;
     int timer;
 };

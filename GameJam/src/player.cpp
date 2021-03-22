@@ -37,6 +37,7 @@ void Player::jump_movement()
 {
     switch (state)
     {
+    case jump_state::NONE: break;
     case jump_state::JUMPING:
         old_position.y = position.y;
         position.y -= (SPEED * 2) * m_pge->GetElapsedTime();
@@ -46,7 +47,7 @@ void Player::jump_movement()
         if (std::abs(position.y - jump_pos.y) > jump_height || run_collision(false))
         {
             position.y = old_position.y;
-            double_jump_timer = GetTickCount();
+            double_jump_timer = time;
             state = jump_state::NONE;
         }
         break;
@@ -54,7 +55,7 @@ void Player::jump_movement()
 
     if (state == jump_state::NONE && !double_jump)
     {
-        if (m_pge->GetKey(olc::UP).bPressed && (GetTickCount() - double_jump_timer) < 250)
+        if (m_pge->GetKey(olc::UP).bPressed && (time - double_jump_timer) < 250)
         {
             double_jump = true;
             jump_pos = position;
@@ -159,7 +160,7 @@ bool Player::run_collision(bool interaction)
         if (check_collision(*tile))
         {
             if ((name.compare("collectable") == 0 || name.compare("correct_key") == 0 || name.compare("next_level") == 0) && interaction)
-                pickup_time = GetTickCount();
+                pickup_time = time;
             if (name.compare("collectable") == 0 && key_state != key_state::HOLDING && interaction)
             {
                 tile->destroyed = true;

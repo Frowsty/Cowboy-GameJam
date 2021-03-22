@@ -1,11 +1,14 @@
 #define OLC_PGE_APPLICATION
 #define OLC_PGEX_ANIMSPR
+
 #include "headers/game.h"
 
 int main()
 {
-#ifndef _DEBUG
-		FreeConsole();
+#ifndef EMSCRIPTEN_COMPATIBLE
+    #ifndef _DEBUG
+		    FreeConsole();
+    #endif
 #endif
 
 		Game game;

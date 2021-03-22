@@ -1,6 +1,7 @@
 #pragma once
 #include "core.h"
 #include <deque>
+#include <stdlib.h>
 
 #define TILE_SIZE 32
 
