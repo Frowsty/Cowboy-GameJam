@@ -70,9 +70,9 @@ void Map::loadMap(const std::string& path)
                     int tile_height = 0;
                     for (int i = tile_sheet_pos_y + 1; i < tile_sheet_pos_y + tile_size.y; i++) {
                         olc::Pixel pixel = temp_sprite.GetPixel(tile_sheet_pos_x - (tile_sheet_pos_x / tile_size.y) + (tile_size.x / 2), i);
-                        if (std::abs(tile_sheet_pos_y - i) >= TILE_SIZE - 1)
+                        if (std::abs(tile_sheet_pos_y - i) >= tile_size.y - 1)
                         {
-                            tile_height = TILE_SIZE;
+                            tile_height = tile_size.y;
                             break;
                         }
                         if (pixel.a == 0) {

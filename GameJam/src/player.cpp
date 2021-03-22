@@ -217,6 +217,8 @@ void Player::render()
 
             m_pge->DrawRect(tile->position, tile->tile_size, olc::RED);
         }
+        // Draw player collidable
+        m_pge->DrawRect({ (int)position.x + 4, (int)position.y - 1 }, size, olc::RED);
     }
 }
 

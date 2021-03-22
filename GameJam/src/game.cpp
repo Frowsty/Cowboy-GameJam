@@ -10,6 +10,11 @@ void Game::setup(olc::PixelGameEngine* pge)
     start_time = 0;
     timer = TIMER;
     game_state = game_states::SPLASHSCREEN;
+
+    // particle system
+    particles.m_pge = pge;
+    particles.layer = CreateLayer();
+    particles.create(200);
 }
 
 bool Game::OnUserCreate()
@@ -20,7 +25,7 @@ bool Game::OnUserCreate()
 
 bool Game::OnUserUpdate(float fElapsedTime)
 {
-    Clear(olc::BLACK);
+    Clear(olc::BLANK);
     std::string github_text = "https://github.com/Frowsty/Cowboy-GameJam";
     olc::vf2d github_size = GetTextSize(github_text);
     switch (game_state)
@@ -62,6 +67,9 @@ bool Game::OnUserUpdate(float fElapsedTime)
             ShellExecute(0, 0, github_text.c_str(), 0, 0, SW_SHOW);
         });
 
+        // render particles
+        particles.update();
+
         // update input and render.
         menu.on_input();
         menu.on_render();
@@ -91,6 +99,9 @@ bool Game::OnUserUpdate(float fElapsedTime)
         {
             ShellExecute(0, 0, github_text.c_str(), 0, 0, SW_SHOW);
         });
+
+        // render particles
+        particles.update();
 
         menu.on_input();
         menu.on_render();

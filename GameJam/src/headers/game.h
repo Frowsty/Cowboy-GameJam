@@ -4,6 +4,7 @@
 #include "player.h"
 #include "map.h"
 #include "menu.h"
+#include "particle.h"
 #include <windows.h>
 #include <shellapi.h>
 
@@ -42,6 +43,7 @@ private:
     Player player;
     Map map;
     Menu menu;
+    Particles particles;
     bool in_game;
     int cur_level;
     float start_time;
