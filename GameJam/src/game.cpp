@@ -14,13 +14,34 @@ void Game::setup(olc::PixelGameEngine* pge)
     // particle system
     particles.m_pge = pge;
     particles.layer = CreateLayer();
-    particles.create(200);
+    particles.set_boundaries({ ScreenWidth(), ScreenHeight() });
+    particles.create(200); // Call create last, always set boundaries before calling create
+
+    // load default map to be drawn in main menu
+    map.loadMap("./sprites/map1.json");
+    menu_tint_layer = CreateLayer();
+    menu_map_layer = CreateLayer();
+    
 }
 
 bool Game::OnUserCreate()
 {    
     setup(this);
     return true;
+}
+
+void Game::draw_menu_map(int map_layer, int tint_layer)
+{
+    SetDrawTarget(tint_layer);
+    Clear(olc::Pixel(100, 100, 100, 150));
+    EnableLayer(tint_layer, true);
+
+    SetDrawTarget(map_layer);
+    map.render();
+    EnableLayer(map_layer, true);
+
+    // reset draw layer
+    SetDrawTarget(nullptr);
 }
 
 bool Game::OnUserUpdate(float fElapsedTime)
@@ -70,8 +91,11 @@ bool Game::OnUserUpdate(float fElapsedTime)
         });
 #endif
 
-        // render particles
+        // render particles (will act as rain in the main menu)
         particles.update();
+
+        // draw the map in the main menu
+        draw_menu_map(menu_map_layer, menu_tint_layer);
 
         // update input and render.
         menu.on_input();
@@ -105,8 +129,11 @@ bool Game::OnUserUpdate(float fElapsedTime)
             });
 #endif
 
-        // render particles
+        // render particles (will act as rain in the main menu)
         particles.update();
+
+        // draw the map in the main menu
+        draw_menu_map(menu_map_layer, menu_tint_layer);
 
         menu.on_input();
         menu.on_render();
@@ -216,8 +243,11 @@ bool Game::OnUserUpdate(float fElapsedTime)
 
         menu.add_text({ 5, 627 }, "Made by Kian and Daniel 2021", false);
 
-        // render particles
+        // render particles (will act as rain in the main menu)
         particles.update();
+
+        // draw the map in the main menu
+        draw_menu_map(menu_map_layer, menu_tint_layer);
 
         menu.on_input();
         menu.on_render();
@@ -236,8 +266,11 @@ bool Game::OnUserUpdate(float fElapsedTime)
 
         menu.add_text({ 5, 627 }, "Made by Kian and Daniel 2021", false);
 
-        // render particles
+        // render particles (will act as rain in the main menu)
         particles.update();
+
+        // draw the map in the main menu
+        draw_menu_map(menu_map_layer, menu_tint_layer);
 
         menu.on_input();
         menu.on_render();

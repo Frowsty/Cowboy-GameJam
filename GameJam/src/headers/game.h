@@ -32,6 +32,8 @@ public:
 
     void setup(olc::PixelGameEngine* pge);
 
+    void draw_menu_map(int layer, int tint);
+
     bool OnUserCreate() override;
     bool OnUserUpdate(float fElapsedTime) override;
 
@@ -46,4 +48,6 @@ private:
     int cur_level;
     long long start_time;
     int timer;
+    int menu_map_layer;
+    int menu_tint_layer;
 };
