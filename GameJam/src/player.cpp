@@ -8,11 +8,10 @@ void Player::create()
     // set animation type and mode
     player_sprite.type = olc::AnimatedSprite::SPRITE_TYPE::DECAL;
     player_sprite.mode = olc::AnimatedSprite::SPRITE_MODE::SINGLE;
-    spritesheet = new olc::Renderable();
 
     // load spritesheet
-    spritesheet->Load("./sprites/character.png");
-    player_sprite.spriteSheet = spritesheet;
+    spritesheet.Load("./sprites/character.png");
+    player_sprite.spriteSheet = &spritesheet;
     player_sprite.SetSpriteSize({ 32, 32 });
     size = { 25, 31 };
 

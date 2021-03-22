@@ -57,7 +57,7 @@ bool Game::OnUserUpdate(float fElapsedTime)
 
         game_state = game_states::MAIN_MENU;
         return true;
-
+        
     case game_states::MAIN_MENU:
         // push all menu elements to the vector.
         menu.add_text({ ((ScreenWidth() / 2.f)), ((ScreenHeight() / 2.f) - 23.f) }, !in_game ? "Cowboy game jam. 2021" : "Paused.", true);

@@ -52,7 +52,7 @@ public:
     olc::vf2d old_position;
     olc::vi2d size;
     olc::AnimatedSprite player_sprite;
-    olc::Renderable* spritesheet;
+    olc::Renderable spritesheet;
     std::vector<std::pair<std::string, Map::tile*>>* collidable_tiles;
 public:
 
