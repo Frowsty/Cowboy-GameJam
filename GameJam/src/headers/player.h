@@ -21,7 +21,8 @@ public:
 
     enum class key_type
     {
-        WRONG = 0,
+        NONE = 0,
+        WRONG,
         CORRECT 
     };
 
@@ -31,7 +32,7 @@ public:
 
     bool on_ground = false;
     bool first_pickup = false;
-    float gravity_multiplier = 1.0f;
+    float gravity_multiplier = 0.1f;
     long long interact_time = 0;
     long long pickup_time = 0;
     int jump_height = 70;

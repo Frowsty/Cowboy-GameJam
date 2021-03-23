@@ -66,19 +66,19 @@ void Player::jump_movement()
     if (state != jump_state::JUMPING)
     {
         old_position.y = position.y;
-        position.y += (GRAVITY * gravity_multiplier) * m_pge->GetElapsedTime();
+        position.y += (GRAVITY * gravity_multiplier)  * m_pge->GetElapsedTime();
 
         if (run_collision(false))
         {
-            gravity_multiplier = 1.0f;
+            gravity_multiplier = 0.1f;
             on_ground = true;
             double_jump = false;
             position.y = old_position.y;
         }
         else
         {
+            gravity_multiplier += 6.0f * m_pge->GetElapsedTime();
             on_ground = false;
-            gravity_multiplier += 0.0025f;
         }
     }
 }
