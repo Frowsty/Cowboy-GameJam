@@ -40,7 +40,7 @@ void Game::draw_menu_map(int map_layer, int tint_layer)
     map.render();
     EnableLayer(map_layer, true);
 
-    // reset draw layer
+    // reset draw target
     SetDrawTarget(nullptr);
 }
 
